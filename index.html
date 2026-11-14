@@ -221,6 +221,9 @@ details p{color:var(--ink-soft); line-height:1.65; margin:11px 0 2px; font-size:
 .cta-band{margin:58px 0 8px; background:var(--lime); border:3px solid var(--ink); border-radius:36px; box-shadow:var(--sh-lg); padding:36px 30px; display:flex; justify-content:space-between; align-items:center; gap:22px; flex-wrap:wrap}
 .cta-band h2{margin:0; font-size:clamp(30px,4.6vw,46px)}
 .cta-band p{margin:10px 0 0; color:#2E4300; font-weight:600; max-width:520px; line-height:1.55; font-size:16.5px}
+.prompt-box{max-width:760px; margin:0 auto; background:var(--ink); border:3px solid var(--ink); border-radius:24px; box-shadow:var(--sh-lg); padding:22px 22px 18px}
+.prompt-box pre{margin:0 0 16px; color:#FFF6E5; font:15px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; white-space:pre-wrap; word-break:break-word}
+.prompt-note{max-width:640px; margin:16px auto 0; text-align:center; color:var(--ink-soft); font-size:14.5px; line-height:1.55}
 footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44px}
 .foot{display:flex; justify-content:space-between; gap:22px; flex-wrap:wrap; align-items:center}
 .foot .brand-name{color:#fff}
@@ -422,6 +425,22 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
       <a class="btn btn-dark" href="#mint" style="min-height:54px">Go to Mint →</a>
     </div>
   </div>
+
+  <section id="agent" class="wrap reveal">
+    <div class="section-head center">
+      <span class="eyebrow"><i></i> For agents</span>
+      <h2>Let your agent <em>mint.</em></h2>
+      <p class="lead">Agents and bots welcome. Copy the prompt, paste it to your agent, done.</p>
+    </div>
+    <div class="prompt-box">
+      <pre id="promptMint">Mint 1 SpoxyFun NFT now.
+Contract [PASTE CONTRACT ADDRESS AFTER DEPLOY], BNB Chain 56, mint() payable.
+Wallet: [your wallet], holds Binance Agent ID. Execute from my wallet only.
+Value: 0.0001 BNB = 100000000000000 wei + gas. Reply tx link only.</pre>
+      <button class="btn btn-lime" id="copyPromptBtn" type="button">Copy prompt</button>
+    </div>
+    <p class="prompt-note">The contract isn't deployed yet — this prompt activates with the contract address.</p>
+  </section>
 </main>
 
 <footer>
@@ -432,7 +451,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
     </a>
     <p>SpoxyFun · 2,222 ghosts · BNB Chain · Mint fee 0.0001 BNB to the contract.<br>Concept site — contract not deployed yet. No mint is live on this page. Mint requires a Binance Agent ID.</p>
     <nav class="foot-links" aria-label="Footer">
-      <a href="#gang">Gang</a><a href="#how">How it works</a><a href="#mint">Mint</a><a href="#faq">FAQ</a><a href="#top">Top ↑</a>
+      <a href="#gang">Gang</a><a href="#how">How it works</a><a href="#mint">Mint</a><a href="#agent">Agents</a><a href="#faq">FAQ</a><a href="#top">Top ↑</a>
     </nav>
   </div>
 </footer>
@@ -573,6 +592,11 @@ mintBtn.addEventListener('click',()=>{
   if(!account){toast('Connect your wallet first, then mint.');connectBtn.focus();return;}
   if(agentIdStatus!=='holder'){toast('Mint requires a Binance Agent ID. Checking…');checkAgentId();return;}
   toast('Mint goes live here once the contract is wired in.');
+});
+document.getElementById('copyPromptBtn')?.addEventListener('click',async()=>{
+  const t=document.getElementById('promptMint').innerText;
+  try{await navigator.clipboard.writeText(t);toast('Prompt copied.');}
+  catch(e){toast('Copy failed — select the text manually.');}
 });
 if(window.ethereum){
   window.ethereum.on?.('accountsChanged',accs=>{
