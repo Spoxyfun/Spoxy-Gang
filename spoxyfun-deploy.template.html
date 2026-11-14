@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SpoxyFun — Deploy</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+<style>
+  :root { --purple:#6D28D9; --purple-deep:#3B1470; --green:#65A30D; --bg:#160B29; --card:#221244; --ink:#F7F3FF; --soft:#C4B5E8; --gold:#F2B705; --lime:#A3E635; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap { max-width:760px; margin:0 auto; padding:28px 18px 60px; }
+  h1 { font-size:1.6rem; margin:6px 0 4px; }
+  .sub { color:var(--soft); margin:0 0 20px; }
+  .step { background:var(--card); border:2px solid var(--purple-deep); border-radius:16px; padding:18px; margin:14px 0; }
+  .step h2 { margin:0 0 8px; font-size:1.15rem; }
+  .step h2 .n { color:var(--lime); margin-right:8px; }
+  .step p { color:var(--soft); line-height:1.55; margin:8px 0; }
+  .step p b, .step li b { color:var(--ink); }
+  ul { color:var(--soft); line-height:1.6; margin:8px 0; padding-left:20px; }
+  .btn { background:var(--purple); color:#fff; border:0; border-radius:10px; padding:11px 18px; font-weight:700; font-size:1rem; cursor:pointer; margin:6px 8px 0 0; }
+  .btn.green { background:var(--green); }
+  .btn.ghost { background:transparent; border:2px solid var(--purple); color:var(--ink); }
+  .btn:disabled { opacity:.45; cursor:not-allowed; }
+  .mono { font-family:ui-monospace,Menlo,Consolas,monospace; word-break:break-all; }
+  .pill { display:inline-block; font-size:.8rem; font-weight:700; padding:3px 10px; border-radius:999px; background:#333; color:#fff; vertical-align:middle; }
+  .pill.live { background:var(--green); }
+  .pill.done { background:#555; }
+  .pill.warn { background:#B45309; }
+  #log { background:#0E0721; border-radius:12px; padding:14px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; min-height:80px; }
+  #log .ok { color:#4ADE80; } #log .err { color:#F87171; }
+  .kv { background:#0E0721; border-radius:10px; padding:12px 14px; margin:10px 0; line-height:1.9; }
+  textarea { width:100%; min-height:110px; background:#0E0721; color:var(--ink); border:1px solid var(--purple-deep); border-radius:10px; padding:12px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; }
+  input.txt { width:100%; background:#0E0721; color:var(--ink); border:1px solid var(--purple-deep); border-radius:10px; padding:10px 12px; font-size:.85rem; }
+  label.lbl { display:block; font-size:.85rem; color:var(--soft); margin-bottom:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>&#128123; SpoxyFun — Deploy</h1>
+  <p class="sub">Owner-only page. Deploy the SpoxyFun NFT contract on BNB Chain, set the metadata base URI, open mint when ready, and withdraw the mint fees. Nothing here deploys or moves funds without your wallet confirmation.</p>
+
+  <section class="step" id="step-connect">
+    <h2><span class="n">01</span>Connect wallet</h2>
+    <p>Connect the wallet that should <b>own</b> the contract. It deploys the contract, is the only wallet that can open mint, set the base URI, or withdraw, and receives the mint fees on withdraw.</p>
+    <button class="btn" id="btn-connect" type="button">Connect Wallet</button>
+    <p id="wallet-status">Not connected.</p>
+  </section>
+
+  <section class="step" id="step-deploy">
+    <h2><span class="n">02</span>Deploy SpoxyFun <span class="pill done" id="pill-deploy">Not deployed</span></h2>
+    <p>Fixed at deploy. The Binance Agent ID registry is registered once via the constructor argument — prefilled below and read-only, it cannot be changed:</p>
+    <p><label class="lbl" for="agent-id-registry">Binance Agent ID registry (registered at deploy, cannot be changed)</label><input id="agent-id-registry" class="mono txt" type="text" readonly value="0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F" /></p>
+    <p><label class="lbl" for="base-uri">Metadata base URI (optional now — can be set or changed later in step 03). Must end with a slash, e.g. https://your-host.com/nft/metadata/</label><input id="base-uri" class="mono txt" type="text" placeholder="https://your-host.com/nft/metadata/" /></p>
+    <ul>
+      <li><b>Supply:</b> 2,222 — token IDs 1–2,222. Each mint assigns a random unminted ID (random draw, the minter cannot pick an ID).</li>
+      <li><b>Mint:</b> 0.0001 BNB — one price for all token IDs 1–2,222.</li>
+      <li><b>Fees</b> stay in the contract until the owner withdraws them.</li>
+      <li><b>Agent ID gate:</b> the minter must hold at least one Binance Agent ID from the registry above. No whitelist.</li>
+      <li><b>Mint starts CLOSED.</b> Open it in step 03 when the web and metadata hosting are ready.</li>
+      <li><b>Artwork:</b> tokenURI returns base URI + token ID + ".json", pointing at the hosted metadata folder (2,222 images + metadata files). While the base URI is empty, tokenURI returns an empty string.</li>
+    </ul>
+    <button class="btn" id="btn-deploy" type="button" disabled>Deploy Contract</button>
+    <p>Contract: <span class="mono" id="contract-addr">—</span></p>
+  </section>
+
+  <section class="step" id="step-mint">
+    <h2><span class="n">03</span>Open / close mint &amp; base URI <span class="pill done" id="pill-mint">Mint closed</span></h2>
+    <button class="btn green" id="btn-refresh" type="button" disabled>Refresh Status</button>
+    <button class="btn" id="btn-open" type="button" disabled>Open Mint</button>
+    <button class="btn ghost" id="btn-close" type="button" disabled>Close Mint</button>
+    <p><label class="lbl" for="base-uri-new">New metadata base URI (must end with a slash)</label><input id="base-uri-new" class="mono txt" type="text" placeholder="https://your-host.com/nft/metadata/" /></p>
+    <button class="btn" id="btn-set-base" type="button" disabled>Set Base URI</button>
+    <div class="kv" id="mint-status">Deploy the contract first.</div>
+  </section>
+
+  <section class="step" id="step-withdraw">
+    <h2><span class="n">04</span>Withdraw mint fees</h2>
+    <p>Withdraws all mint fees collected in the contract to the owner wallet.</p>
+    <button class="btn" id="btn-withdraw" type="button" disabled>Withdraw Mint Fees</button>
+  </section>
+
+  <section class="step" id="step-summary">
+    <h2><span class="n">05</span>Summary</h2>
+    <textarea id="summary" readonly>SpoxyFun not deployed yet.</textarea><br />
+    <button class="btn ghost" id="btn-copy" type="button">Copy Summary</button>
+  </section>
+
+  <section class="step">
+    <h2>Log</h2>
+    <div id="log"></div>
+  </section>
+</div>
+<script>
+var ART = __ART_JSON__;
+var state = { provider: null, signer: null, account: null, network: null, contract: null };
+
+function $(id) { return document.getElementById(id); }
+function log(msg, cls) {
+  var d = document.createElement("div");
+  if (cls) d.className = cls;
+  d.textContent = new Date().toLocaleTimeString() + "  " + msg;
+  $("log").appendChild(d);
+}
+function errText(e) { return (e && (e.shortMessage || e.reason || e.message)) || String(e); }
+function setPill(id, text, cls) { var p = $(id); p.textContent = text; p.className = "pill " + cls; }
+function normBase(u) {
+  u = (u || "").trim();
+  if (u && u.slice(-1) !== "/") { u += "/"; log("Base URI adjusted to end with a slash: " + u); }
+  return u;
+}
+
+async function connect() {
+  if (typeof window.ethereum === "undefined") { log("No Web3 wallet found. Open this page inside a wallet app browser (MetaMask / Trust Wallet), or install MetaMask.", "err"); return; }
+  if (typeof ethers === "undefined") { log("The ethers library failed to load — check your connection and reload the page.", "err"); return; }
+  try {
+    state.provider = new ethers.BrowserProvider(window.ethereum);
+    await state.provider.send("eth_requestAccounts", []);
+    var net = await state.provider.getNetwork();
+    if (net.chainId !== 56n) {
+      log("Switching wallet to BNB Chain (56)…");
+      try {
+        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x38" }] });
+      } catch (e) {
+        if (e && e.code === 4902) {
+          await window.ethereum.request({ method: "wallet_addEthereumChain", params: [{ chainId: "0x38", chainName: "BNB Smart Chain", nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 }, rpcUrls: ["https://bsc-dataseed.binance.org/"], blockExplorerUrls: ["https://bscscan.com/"] }] });
+        } else { throw e; }
+      }
+      state.provider = new ethers.BrowserProvider(window.ethereum);
+      net = await state.provider.getNetwork();
+    }
+    state.signer = await state.provider.getSigner();
+    state.account = await state.signer.getAddress();
+    state.network = net;
+    var bal = await state.provider.getBalance(state.account);
+    $("wallet-status").innerHTML = "Connected: <span class='mono'>" + state.account + "</span> · <b>" + ethers.formatEther(bal) + " BNB</b>";
+    $("btn-deploy").disabled = false;
+    log("Connected " + state.account + " on BNB Chain. Balance: " + ethers.formatEther(bal) + " BNB.", "ok");
+  } catch (e) { log("Connect failed: " + errText(e), "err"); }
+}
+
+async function deploy() {
+  if (!state.signer) { log("Connect your wallet first.", "err"); return; }
+  try {
+    $("btn-deploy").disabled = true;
+    log("Deploying SpoxyFun — confirm in your wallet…");
+    var factory = new ethers.ContractFactory(ART.abi, ART.bytecode, state.signer);
+    var registry = $("agent-id-registry").value.trim();
+    var baseURI = normBase($("base-uri").value);
+    log("Registering Agent ID registry: " + registry);
+    log(baseURI ? ("Base URI: " + baseURI) : "Base URI: (empty — set it later in step 03)");
+    var c = await factory.deploy(registry, baseURI);
+    log("Deploy tx sent: " + c.deploymentTransaction().hash);
+    await c.waitForDeployment();
+    var addr = await c.getAddress();
+    state.contract = addr;
+    $("contract-addr").textContent = addr;
+    setPill("pill-deploy", "Deployed", "live");
+    $("btn-refresh").disabled = false;
+    $("btn-open").disabled = false;
+    $("btn-close").disabled = false;
+    $("btn-set-base").disabled = false;
+    $("btn-withdraw").disabled = false;
+    $("summary").value = "SpoxyFun deployed on BNB Chain (56).\nContract: " + addr + "\nOwner: " + state.account + "\nAgent ID registry: " + registry + "\nBase URI: " + (baseURI || "(empty)") + "\nDeploy tx: " + c.deploymentTransaction().hash + "\nSupply: 2222, one mint price: 0.0001 BNB for all IDs, random ID draw\nMint requires a Binance Agent ID from the registry above.\nMint starts CLOSED — open it from the deploy page when ready.";
+    log("SpoxyFun deployed at " + addr, "ok");
+    await refresh();
+  } catch (e) {
+    $("btn-deploy").disabled = false;
+    log("Deploy failed: " + errText(e), "err");
+  }
+}
+
+async function refresh() {
+  if (!state.contract || !state.provider) return;
+  try {
+    var c = new ethers.Contract(state.contract, ART.abi, state.provider);
+    var registry = await c.agentIdRegistry();
+    var minted = await c.totalMinted();
+    var remaining = await c.remaining();
+    var open = await c.mintOpen();
+    var price = await c.currentPrice();
+    var baseURI = await c.baseURI();
+    var bal = await state.provider.getBalance(state.contract);
+    $("mint-status").innerHTML =
+      "Agent ID registry: <span class='mono'>" + registry + "</span><br>" +
+      "Mint is <b>" + (open ? "OPEN" : "CLOSED") + "</b><br>" +
+      "Minted: <b>" + minted + " / 2,222</b> · Remaining: <b>" + remaining + "</b><br>" +
+      "Current price: <b>" + ethers.formatEther(price) + " BNB</b><br>" +
+      "Base URI: <span class='mono'>" + (baseURI || "(empty)") + "</span><br>" +
+      "Contract balance (mint fees): <b>" + ethers.formatEther(bal) + " BNB</b>";
+    setPill("pill-mint", open ? "Mint open" : "Mint closed", open ? "live" : "done");
+    log("Status: " + minted + "/2222 minted, mint " + (open ? "open" : "closed") + ", next price " + ethers.formatEther(price) + " BNB, base URI " + (baseURI || "(empty)") + ".");
+  } catch (e) { log("Refresh failed: " + errText(e), "err"); }
+}
+
+async function setMint(open) {
+  if (!state.contract || !state.signer) return;
+  try {
+    var c = new ethers.Contract(state.contract, ART.abi, state.signer);
+    log("Calling setMintOpen(" + open + ") — confirm in your wallet…");
+    var tx = await c.setMintOpen(open);
+    await tx.wait();
+    log("Mint is now " + (open ? "OPEN" : "CLOSED") + ". Tx: " + tx.hash, "ok");
+    await refresh();
+  } catch (e) { log("setMintOpen failed: " + errText(e), "err"); }
+}
+
+async function setBaseURI() {
+  if (!state.contract || !state.signer) return;
+  try {
+    var baseURI = normBase($("base-uri-new").value);
+    if (!baseURI) { log("Enter a base URI first.", "err"); return; }
+    var c = new ethers.Contract(state.contract, ART.abi, state.signer);
+    log("Calling setBaseURI(" + baseURI + ") — confirm in your wallet…");
+    var tx = await c.setBaseURI(baseURI);
+    await tx.wait();
+    log("Base URI set: " + baseURI + ". Tx: " + tx.hash, "ok");
+    await refresh();
+  } catch (e) { log("setBaseURI failed: " + errText(e), "err"); }
+}
+
+async function withdraw() {
+  if (!state.contract || !state.signer) return;
+  try {
+    var c = new ethers.Contract(state.contract, ART.abi, state.signer);
+    log("Withdrawing mint fees to the owner — confirm in your wallet…");
+    var tx = await c.withdraw();
+    await tx.wait();
+    log("Withdraw confirmed: " + tx.hash, "ok");
+    await refresh();
+  } catch (e) { log("Withdraw failed: " + errText(e), "err"); }
+}
+
+$("btn-connect").addEventListener("click", connect);
+$("btn-deploy").addEventListener("click", deploy);
+$("btn-refresh").addEventListener("click", refresh);
+$("btn-open").addEventListener("click", function () { setMint(true); });
+$("btn-close").addEventListener("click", function () { setMint(false); });
+$("btn-set-base").addEventListener("click", setBaseURI);
+$("btn-withdraw").addEventListener("click", withdraw);
+$("btn-copy").addEventListener("click", function () {
+  $("summary").select();
+  document.execCommand("copy");
+  log("Summary copied.", "ok");
+});
+log("SpoxyFun deploy page ready. Connect your wallet to begin.");
+</script>
+</body>
+</html>
