@@ -1,0 +1,35 @@
+{
+  "name": "SpoxyFun #1130",
+  "description": "A cute little ghost from the SpoxyFun gang - spooky fun, never scary. One of 2,222 unique ghosts on BNB Chain.",
+  "image": "__SPOXYFUN_BASE_URL__/images/1130.webp",
+  "attributes": [
+    {
+      "trait_type": "Character",
+      "value": "DJ"
+    },
+    {
+      "trait_type": "Mood",
+      "value": "Groovy"
+    },
+    {
+      "trait_type": "Colorway",
+      "value": "Ocean"
+    },
+    {
+      "trait_type": "Frame",
+      "value": "Halo"
+    },
+    {
+      "trait_type": "Mirrored",
+      "value": "Yes"
+    },
+    {
+      "trait_type": "Finish",
+      "value": "Matte"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    }
+  ]
+}
