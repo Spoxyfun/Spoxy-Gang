@@ -206,6 +206,11 @@ section{padding:56px 0 6px}
 .mint-box .btn-idle{background:#EFE8D8; color:#6B6480; margin-top:12px; box-shadow:3px 3px 0 var(--ink)}
 .wallet-line{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:13px; font-size:13.5px; color:#6B6480; font-weight:600}
 .wallet-line code{background:#EFE8D8; border:2px solid var(--ink); border-radius:8px; padding:5px 9px; color:var(--ink); font-weight:700}
+.mint-box .btn-lime{background:#B9E62E; color:var(--ink); margin-top:12px; box-shadow:3px 3px 0 var(--ink)}
+.mint-box .btn-lime:hover{background:#A8D923}
+.btn:disabled{opacity:.55; cursor:not-allowed}
+.mint-result{margin-top:13px; font-size:14px; line-height:1.55; font-weight:600; color:#2E4300; background:#F1FBE0; border:2.5px solid var(--ink); border-radius:14px; padding:11px 14px}
+.mint-result a{color:#3D1E6D; text-decoration:underline; font-weight:800; white-space:nowrap}
 .segments{display:flex; gap:5px; margin-top:10px}
 .segments i{flex:1; height:13px; background:#E9E0C8; border:2px solid var(--ink); border-radius:4px}
 .progress-top{display:flex; justify-content:space-between; font-size:11.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#6B6480; margin-top:17px}
@@ -375,7 +380,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
       <div class="mint-box">
         <span class="status" data-i18n-html="mint.status"><i></i> Mint is live</span>
         <h3 data-i18n="mint.h3">Mint a Spoxy Ghost</h3>
-        <p data-i18n="mint.p">Mint is live. Connect your wallet to check your Binance Agent ID, or let your agent mint with the prompt below.</p>
+        <p data-i18n="mint.p">Mint is live. Connect your wallet and mint directly, or let your agent mint with the prompt below.</p>
         <div class="price-rows">
           <div><span data-i18n="row.supply">Supply</span><b data-i18n="row.supply_v">2,222 ghosts</b></div>
           <div><span data-i18n="row.fee">Mint fee</span><b>0.0001 BNB</b></div>
@@ -389,7 +394,8 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
           <span id="agentStatusText">Connect your wallet — we will check your Binance Agent ID on-chain.</span>
         </div>
         <button class="btn btn-dark" id="connectBtn" type="button">Connect Wallet</button>
-        <button class="btn btn-idle" id="mintBtn" type="button" data-i18n="mint.btn">Mint — 0.0001 BNB</button>
+        <button class="btn btn-lime" id="mintBtn" type="button" data-i18n="mint.btn">Mint — 0.0001 BNB</button>
+        <p class="mint-result" id="mintResult" hidden><span id="mintResultText"></span> <a id="mintResultLink" href="#" target="_blank" rel="noopener" data-i18n="mint.result_link">View transaction ↗</a></p>
         <div class="wallet-line"><span id="walletStatus">Wallet not connected</span><code id="walletAddr" style="display:none"></code></div>
         <div class="progress-top"><span data-i18n="progress.minted">Minted</span><span data-i18n="progress.opens">Live now · 2,222 total</span></div>
         <div class="segments" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -448,7 +454,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
     <div class="cta-band">
       <div>
         <h2 data-i18n="cta.h2">Ready to get spooky?</h2>
-        <p data-i18n="cta.p">2,222 ghosts. One small fee. A lot of fun. Come back when mint opens — or bring a friend who loves ghosts.</p>
+        <p data-i18n="cta.p">2,222 ghosts. One small fee. A lot of fun. Mint is live — or bring a friend who loves ghosts.</p>
       </div>
       <a class="btn btn-dark" href="#mint" style="min-height:54px" data-i18n="cta.btn">Go to Mint →</a>
     </div>
@@ -580,7 +586,7 @@ const I18N = {
     "check4": "Binance Agent ID required — only holders can mint. No ID, no mint.",
     "mint.status": "<i></i> Mint is live",
     "mint.h3": "Mint a Spoxy Ghost",
-    "mint.p": "Mint is live. Connect your wallet to check your Binance Agent ID, or let your agent mint with the prompt below.",
+    "mint.p": "Mint is live. Connect your wallet and mint directly, or let your agent mint with the prompt below.",
     "row.supply": "Supply",
     "row.supply_v": "2,222 ghosts",
     "row.fee": "Mint fee",
@@ -595,7 +601,7 @@ const I18N = {
     "progress.opens": "Live now · 2,222 total",
     "status.connect": "Connect your wallet — we will check your Binance Agent ID on-chain.",
     "status.checking": "Checking your Binance Agent ID on-chain…",
-    "status.holder": "Binance Agent ID found. This wallet can mint when mint opens.",
+    "status.holder": "Binance Agent ID found. This wallet can mint.",
     "status.none": "No Binance Agent ID on this wallet. Mint is exclusive to Agent ID holders.",
     "status.error": "Could not verify your Agent ID. Check your connection and try reconnecting.",
     "wallet.notconn": "Wallet not connected",
@@ -611,6 +617,19 @@ const I18N = {
     "toast.connectfirst": "Connect your wallet first, then mint.",
     "toast.checking": "Mint requires a Binance Agent ID. Checking…",
     "toast.standby": "Mint is live — use the agent prompt below to mint.",
+    "mint.btn_wait": "Minting… — confirm in your wallet",
+    "mint.btn_confirm": "Waiting for confirmation…",
+    "mint.result": "Minted ghost #{n}!",
+    "mint.result_noid": "Minted! Your ghost is on its way.",
+    "mint.result_link": "View transaction ↗",
+    "toast.sent": "Transaction sent — waiting for confirmation…",
+    "toast.minted": "Minted ghost #{n}! Welcome to the gang.",
+    "toast.minted_noid": "Minted! Check your wallet.",
+    "toast.pending": "Still confirming — check the transaction link below the button.",
+    "toast.txfailed": "Transaction failed on-chain — nothing was minted.",
+    "toast.rejected": "Transaction rejected in your wallet.",
+    "toast.mintfail": "Mint failed. Check your balance and try again.",
+    "toast.chainfail": "Could not switch to BNB Chain. Switch manually and try again.",
     "toast.copied": "Prompt copied.",
     "toast.copyfail": "Copy failed — select the text manually.",
     "traits.eyebrow": "<i></i> Traits",
@@ -639,7 +658,7 @@ const I18N = {
     "q6": "Is mint live right now?",
     "a6": "Yes — mint is live now. 0.0001 BNB per mint, and a Binance Agent ID is required.",
     "cta.h2": "Ready to get spooky?",
-    "cta.p": "2,222 ghosts. One small fee. A lot of fun. Come back when mint opens — or bring a friend who loves ghosts.",
+    "cta.p": "2,222 ghosts. One small fee. A lot of fun. Mint is live — or bring a friend who loves ghosts.",
     "cta.btn": "Go to Mint →",
     "agent.eyebrow": "<i></i> For agents",
     "agent.h2": "Let your agent <em>mint.</em>",
@@ -733,7 +752,7 @@ const I18N = {
     "check4": "需要币安 Agent ID——只有持有者才能铸造。没有 ID，就不能铸造。",
     "mint.status": "<i></i> 铸造进行中",
     "mint.h3": "铸造一只 Spoxy 幽灵",
-    "mint.p": "铸造进行中——连接钱包检查你的币安 Agent ID，或让你的 agent 用下面的提示词铸造。",
+    "mint.p": "铸造进行中——连接钱包直接铸造，或让你的 agent 用下面的提示词铸造。",
     "row.supply": "供应量",
     "row.supply_v": "2,222 只幽灵",
     "row.fee": "铸造费用",
@@ -748,7 +767,7 @@ const I18N = {
     "progress.opens": "进行中 · 共 2,222 只",
     "status.connect": "连接钱包——我们会在链上检查你的币安 Agent ID。",
     "status.checking": "正在链上检查你的币安 Agent ID…",
-    "status.holder": "找到币安 Agent ID。铸造开启后，这个钱包可以铸造。",
+    "status.holder": "找到币安 Agent ID。这个钱包可以铸造。",
     "status.none": "这个钱包没有币安 Agent ID。铸造仅限 Agent ID 持有者。",
     "status.error": "无法验证你的 Agent ID。请检查网络连接并重新连接。",
     "wallet.notconn": "钱包未连接",
@@ -764,6 +783,19 @@ const I18N = {
     "toast.connectfirst": "先连接钱包，然后再铸造。",
     "toast.checking": "铸造需要币安 Agent ID。正在检查…",
     "toast.standby": "铸造进行中——请用下面的 agent 提示词铸造。",
+    "mint.btn_wait": "铸造中…——请在钱包中确认",
+    "mint.btn_confirm": "等待链上确认…",
+    "mint.result": "成功铸造幽灵 #{n} 号！",
+    "mint.result_noid": "铸造成功！你的幽灵正在路上。",
+    "mint.result_link": "查看交易 ↗",
+    "toast.sent": "交易已发送——等待确认…",
+    "toast.minted": "成功铸造幽灵 #{n} 号！欢迎加入幽灵帮。",
+    "toast.minted_noid": "铸造成功！请查看你的钱包。",
+    "toast.pending": "仍在确认中——请查看按钮下方的交易链接。",
+    "toast.txfailed": "交易在链上失败——未铸造任何幽灵。",
+    "toast.rejected": "交易已在钱包中拒绝。",
+    "toast.mintfail": "铸造失败。请检查余额后重试。",
+    "toast.chainfail": "无法切换到 BNB Chain。请手动切换后重试。",
     "toast.copied": "提示词已复制。",
     "toast.copyfail": "复制失败——请手动选择文本。",
     "traits.eyebrow": "<i></i> 特征",
@@ -792,7 +824,7 @@ const I18N = {
     "q6": "现在可以铸造吗？",
     "a6": "是的——铸造现已开放。每次铸造 0.0001 BNB，需要币安 Agent ID。",
     "cta.h2": "准备好迎接小幽灵了吗？",
-    "cta.p": "2,222 只幽灵。一笔小费用。很多乐趣。铸造开启时再来——或者带一位喜欢幽灵的朋友。",
+    "cta.p": "2,222 只幽灵。一笔小费用。很多乐趣。铸造进行中——或者带一位喜欢幽灵的朋友。",
     "cta.btn": "去铸造 →",
     "agent.eyebrow": "<i></i> 给 Agent",
     "agent.h2": "让你的 Agent <em>来铸造。</em>",
@@ -859,7 +891,7 @@ function toast(msg){
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>tel.classList.remove('show'),3200);
 }
 
-/* ============ Wallet + mint (honest standby until contract exists) ============ */
+/* ============ Wallet + direct mint ============ */
 let account=null;
 let agentIdStatus='unknown'; // 'unknown' | 'checking' | 'holder' | 'none' | 'error'
 let agentStatusKey='status.connect';
@@ -938,6 +970,99 @@ connectBtn.addEventListener('click',async()=>{
     toast(t('toast.cancelled'));
   }
 });
+/* Direct mint: raw window.ethereum calls, no library (keeps the page light
+   on slow connections). mint() takes no args: data is just the selector,
+   value is exactly 0.0001 BNB = 100000000000000 wei. No approvals needed. */
+const MINT_SELECTOR='0x1249c58b'; // mint()
+const MINT_OPEN_SELECTOR='0x24bbd049'; // mintOpen()
+const MINT_VALUE_HEX='0x5af3107a4000'; // 100000000000000 wei
+const TRANSFER_TOPIC='0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+let minting=false;
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+async function waitForReceipt(eth,hash){
+  for(let i=0;i<40;i++){
+    try{
+      const rc=await eth.request({method:'eth_getTransactionReceipt',params:[hash]});
+      if(rc) return rc;
+    }catch(_){/* provider hiccup: keep polling */}
+    await sleep(3000);
+  }
+  return null;
+}
+function tokenIdFromReceipt(rc){
+  try{
+    for(const log of rc.logs||[]){
+      if(log.address && log.address.toLowerCase()===CONFIG.CONTRACT_ADDRESS.toLowerCase()
+        && log.topics && log.topics[0] && log.topics[0].toLowerCase()===TRANSFER_TOPIC
+        && log.topics.length>=4){
+        return BigInt(log.topics[3]).toString();
+      }
+    }
+  }catch(_){}
+  return null;
+}
+function showMintResult(hash,tokenId){
+  const el=document.getElementById('mintResult');
+  const link=document.getElementById('mintResultLink');
+  const txt=document.getElementById('mintResultText');
+  if(!el||!link||!txt) return;
+  link.href='https://bscscan.com/tx/'+hash;
+  txt.textContent=tokenId?t('mint.result').replace('{n}',tokenId):t('mint.result_noid');
+  el.hidden=false;
+}
+async function mintNow(){
+  if(minting) return;
+  const eth=window.ethereum;
+  if(!eth){toast(t('toast.nowallet'));return;}
+  try{
+    const chainId=await eth.request({method:'eth_chainId'});
+    if(parseInt(chainId,16)!==CONFIG.CHAIN_ID){
+      try{
+        await eth.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]});
+      }catch(swErr){
+        if(swErr && swErr.code===4902){
+          await eth.request({method:'wallet_addEthereumChain',params:[{chainId:'0x38',chainName:'BNB Smart Chain',nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},rpcUrls:['https://bsc-dataseed.binance.org/'],blockExplorerUrls:['https://bscscan.com']}]});
+        }else{throw swErr;}
+      }
+    }
+  }catch(err){
+    toast(t('toast.chainfail'));
+    return;
+  }
+  try{
+    const openRes=await eth.request({method:'eth_call',params:[{to:CONFIG.CONTRACT_ADDRESS,data:MINT_OPEN_SELECTOR},'latest']});
+    if(BigInt(openRes||'0x0')===0n){toast(t('toast.notlive'));return;}
+  }catch(_){/* read failed: let the wallet try; the contract enforces mintOpen */}
+  minting=true;
+  mintBtn.disabled=true;
+  mintBtn.textContent=t('mint.btn_wait');
+  try{
+    const hash=await eth.request({method:'eth_sendTransaction',params:[{from:account,to:CONFIG.CONTRACT_ADDRESS,value:MINT_VALUE_HEX,data:MINT_SELECTOR}]});
+    mintBtn.textContent=t('mint.btn_confirm');
+    toast(t('toast.sent'));
+    const rc=await waitForReceipt(eth,hash);
+    if(rc && parseInt(rc.status,16)===1){
+      const tokenId=tokenIdFromReceipt(rc);
+      showMintResult(hash,tokenId);
+      toast(tokenId?t('toast.minted').replace('{n}',tokenId):t('toast.minted_noid'));
+    }else if(rc){
+      toast(t('toast.txfailed'));
+    }else{
+      showMintResult(hash,null);
+      toast(t('toast.pending'));
+    }
+  }catch(err){
+    if(err && (err.code===4001 || /rejected|denied|cancelled/i.test(err.message||''))){
+      toast(t('toast.rejected'));
+    }else{
+      toast(t('toast.mintfail'));
+    }
+  }finally{
+    minting=false;
+    mintBtn.disabled=false;
+    mintBtn.textContent=t('mint.btn');
+  }
+}
 mintBtn.addEventListener('click',()=>{
   if(account && agentIdStatus==='none'){
     toast(t('toast.noagent'));
@@ -949,7 +1074,7 @@ mintBtn.addEventListener('click',()=>{
   }
   if(!account){toast(t('toast.connectfirst'));connectBtn.focus();return;}
   if(agentIdStatus!=='holder'){toast(t('toast.checking'));checkAgentId();return;}
-  toast(t('toast.standby'));
+  mintNow();
 });
 document.getElementById('copyPromptBtn')?.addEventListener('click',async()=>{
   const txt=document.getElementById('promptMint').innerText;
