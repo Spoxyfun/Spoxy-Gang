@@ -398,8 +398,9 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
         <button class="btn btn-dark" id="freeMintBtn" type="button">Free Mint — Agent ID · max 3 per wallet</button>
         <p class="mint-result" id="mintResult" hidden><span id="mintResultText"></span> <a id="mintResultLink" href="#" target="_blank" rel="noopener" data-i18n="mint.result_link">View transaction ↗</a></p>
         <div class="wallet-line"><span id="walletStatus">Wallet not connected</span><code id="walletAddr" style="display:none"></code></div>
-        <div class="progress-top"><span data-i18n="progress.minted">Minted</span><span data-i18n="progress.opens">Live now · 2,222 total</span></div>
-        <div class="segments" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="progress-top" aria-live="polite"><span id="mintedCount">Minted: loading…</span><span id="remainingCount">Supply left: loading…</span></div>
+        <div class="progress-top" style="margin-top:6px" aria-live="polite"><span id="freeRemainingCount">Free mints left: loading…</span><span id="mintChainStatus">Checking BNB Chain…</span></div>
+        <div class="segments" id="mintProgressBar" role="progressbar" aria-label="Collection mint progress" aria-valuemin="0" aria-valuemax="2222" aria-valuenow="0"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
   </section>
@@ -1002,6 +1003,47 @@ function tokenIdFromReceipt(rc){
   }catch(_){}
   return null;
 }
+const MINT_STATS_SELECTORS={total:'0xa2309ff8',remaining:'0x55234ec0',free:'0xd10a1a2b',open:'0x24bbd049'};
+const BSC_PUBLIC_RPCS=['https://bsc-dataseed.binance.org/','https://bsc-dataseed1.binance.org/','https://bsc-dataseed2.binance.org/'];
+let mintStatsBusy=false;
+async function readContractUint(rpc,selector){
+  const res=await fetch(rpc,{method:'POST',headers:{'content-type':'application/json'},cache:'no-store',body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:CONFIG.CONTRACT_ADDRESS,data:selector},'latest']})});
+  if(!res.ok)throw new Error('RPC HTTP '+res.status);
+  const body=await res.json(); if(body.error)throw new Error(body.error.message||'RPC error');
+  return BigInt(body.result||'0x0');
+}
+async function refreshMintStats(){
+  if(mintStatsBusy||!CONFIG.CONTRACT_ADDRESS)return;
+  mintStatsBusy=true;
+  try{
+    let values=null,lastError=null;
+    for(const rpc of BSC_PUBLIC_RPCS){
+      try{values=await Promise.all([readContractUint(rpc,MINT_STATS_SELECTORS.total),readContractUint(rpc,MINT_STATS_SELECTORS.remaining),readContractUint(rpc,MINT_STATS_SELECTORS.free),readContractUint(rpc,MINT_STATS_SELECTORS.open)]);break;}
+      catch(err){lastError=err;}
+    }
+    if(!values)throw lastError||new Error('No BNB Chain RPC available');
+    const [minted,remaining,freeMinted,isOpen]=values;
+    const fmt=n=>Number(n).toLocaleString(LANG==='zh'?'zh-CN':'en-US');
+    const mintedEl=document.getElementById('mintedCount'),remainingEl=document.getElementById('remainingCount'),freeEl=document.getElementById('freeRemainingCount'),statusEl=document.getElementById('mintChainStatus');
+    if(LANG==='zh'){
+      if(mintedEl)mintedEl.textContent='已铸造 '+fmt(minted)+' / 2,222';
+      if(remainingEl)remainingEl.textContent='剩余 '+fmt(remaining)+' 个';
+      if(freeEl)freeEl.textContent='免费名额剩余 '+fmt(800n-freeMinted);
+      if(statusEl)statusEl.textContent=isOpen?'铸造开放 · 实时':'铸造关闭';
+    }else{
+      if(mintedEl)mintedEl.textContent='Minted: '+fmt(minted)+' / 2,222';
+      if(remainingEl)remainingEl.textContent='Remaining: '+fmt(remaining);
+      if(freeEl)freeEl.textContent='Free spots left: '+fmt(800n-freeMinted);
+      if(statusEl)statusEl.textContent=isOpen?'Mint open · live':'Mint closed';
+    }
+    const bar=document.getElementById('mintProgressBar');
+    if(bar){bar.setAttribute('aria-valuenow',String(minted));bar.setAttribute('aria-valuetext',fmt(minted)+' minted of 2,222');}
+  }catch(err){
+    const statusEl=document.getElementById('mintChainStatus');
+    if(statusEl)statusEl.textContent=LANG==='zh'?'链上数据暂时不可用，正在重试…':'Live data unavailable; retrying…';
+    console.warn('SpoxyFun live supply refresh failed:',err);
+  }finally{mintStatsBusy=false;}
+}
 function showMintResult(hash,tokenId){
   const el=document.getElementById('mintResult');
   const link=document.getElementById('mintResultLink');
@@ -1047,6 +1089,7 @@ async function mintNow(isFree=false){
       const tokenId=tokenIdFromReceipt(rc);
       showMintResult(hash,tokenId);
       toast(tokenId?t('toast.minted').replace('{n}',tokenId):t('toast.minted_noid'));
+      refreshMintStats();
     }else if(rc){
       toast(t('toast.txfailed'));
     }else{
@@ -1123,6 +1166,9 @@ try{
   preferred = (navigator.language||'en').toLowerCase().startsWith('zh') ? 'zh' : 'en';
 }
 setLang(preferred);
+refreshMintStats();
+setInterval(refreshMintStats,15000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshMintStats();});
 </script>
 <script>
 if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
