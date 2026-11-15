@@ -432,15 +432,16 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
   <section id="stake" class="wrap reveal">
     <div class="section-head">
       <span class="eyebrow" data-i18n-html="stake.eyebrow"><i></i> Stake · Coming soon</span>
-      <h2 data-i18n-html="stake.h2">Stake your ghost. <em>Earn tokens.</em></h2>
+      <h2 data-i18n-html="stake.h2">Stake your ghost. <em>Earn rewards.</em></h2>
+      <p class="lead" data-i18n="stake.lead">Your ghost should work while it haunts. Stake it, earn $SPOXY every day, claim whenever you want.</p>
     </div>
-    <div class="cta-band" style="margin-top:0">
-      <div>
-        <h2 data-i18n="stake.card_t">Stake NFT, get tokens.</h2>
-        <p data-i18n="stake.card_p">Staking is coming soon. Stake your SpoxyFun ghost and earn tokens — details will be announced here and on X.</p>
-      </div>
-      <span class="soon-pill" data-i18n="stake.btn">Coming soon</span>
+    <div class="steps">
+      <div class="step"><span class="step-n">01</span><div><b data-i18n="stake.s1t">Stake your ghost</b><span data-i18n="stake.s1p">Stake a SpoxyFun ghost in the staking contract. It stays yours — staking never moves ownership.</span></div></div>
+      <div class="step"><span class="step-n">02</span><div><b data-i18n="stake.s2t">Earn every day</b><span data-i18n="stake.s2p">10 $SPOXY per ghost, per day. The longer it stays staked, the more it earns.</span></div></div>
+      <div class="step"><span class="step-n">03</span><div><b data-i18n="stake.s3t">Claim anytime</b><span data-i18n="stake.s3p">No lock-up. Each claim costs 0.0001 BNB, paid into the staking contract.</span></div></div>
     </div>
+    <p class="why-rarity"><span data-i18n="stake.pills_label">Planned:</span> <b data-i18n="stake.pill_token">Reward token · $SPOXY</b> <b data-i18n="stake.pill_rate">Daily rate · 10 $SPOXY</b> <b data-i18n="stake.pill_fee">Claim fee · 0.0001 BNB</b></p>
+    <p class="prompt-note" data-i18n="stake.note">Staking opens after mint ends. Full details will be announced here and on X first.</p>
   </section>
 
   <!-- TRAITS -->
@@ -567,10 +568,19 @@ const I18N = {
     "w.faq": "FAQ",
     "nav.stake": "Stake",
     "stake.eyebrow": "<i></i> Stake · Coming soon",
-    "stake.h2": "Stake your ghost. <em>Earn tokens.</em>",
-    "stake.card_t": "Stake NFT, get tokens.",
-    "stake.card_p": "Staking is coming soon. Stake your SpoxyFun ghost and earn tokens — details will be announced here and on X.",
-    "stake.btn": "Coming soon",
+    "stake.h2": "Stake your ghost. <em>Earn rewards.</em>",
+    "stake.lead": "Your ghost should work while it haunts. Stake it, earn $SPOXY every day, claim whenever you want.",
+    "stake.s1t": "Stake your ghost",
+    "stake.s1p": "Stake a SpoxyFun ghost in the staking contract. It stays yours — staking never moves ownership.",
+    "stake.s2t": "Earn every day",
+    "stake.s2p": "10 $SPOXY per ghost, per day. The longer it stays staked, the more it earns.",
+    "stake.s3t": "Claim anytime",
+    "stake.s3p": "No lock-up. Each claim costs 0.0001 BNB, paid into the staking contract.",
+    "stake.pills_label": "Planned:",
+    "stake.pill_token": "Reward token · $SPOXY",
+    "stake.pill_rate": "Daily rate · 10 $SPOXY",
+    "stake.pill_fee": "Claim fee · 0.0001 BNB",
+    "stake.note": "Staking opens after mint ends. Full details will be announced here and on X first.",
     "nav.cta": "Mint <span class=\"hide-m\">· 0.001 BNB</span>",
     "menu.aria": "Open menu",
     "hero.eyebrow": "<i></i> 2,222 ghosts · Mint is live",
@@ -753,10 +763,19 @@ const I18N = {
     "w.faq": "常见问题",
     "nav.stake": "质押",
     "stake.eyebrow": "<i></i> 质押 · 即将推出",
-    "stake.h2": "质押你的幽灵，<em>赚取代币。</em>",
-    "stake.card_t": "质押 NFT，赚取代币。",
-    "stake.card_p": "质押即将推出。质押你的 SpoxyFun 幽灵赚取代币——详情将在此页面和 X 上公布。",
-    "stake.btn": "即将推出",
+    "stake.h2": "质押你的幽灵，<em>赚取奖励。</em>",
+    "stake.lead": "让你的幽灵在游荡时也能工作。质押它，每天赚取 $SPOXY，随时领取。",
+    "stake.s1t": "质押你的幽灵",
+    "stake.s1p": "把 SpoxyFun 幽灵存入质押合约。它仍然属于你——质押不会转移所有权。",
+    "stake.s2t": "每天赚取",
+    "stake.s2p": "每只幽灵每天 10 个 $SPOXY。质押越久，赚得越多。",
+    "stake.s3t": "随时领取",
+    "stake.s3p": "没有锁定期。每次领取需支付 0.0001 BNB，存入质押合约。",
+    "stake.pills_label": "计划：",
+    "stake.pill_token": "奖励代币 · $SPOXY",
+    "stake.pill_rate": "每日收益 · 10 $SPOXY",
+    "stake.pill_fee": "领取费用 · 0.0001 BNB",
+    "stake.note": "质押在铸造结束后开放。完整详情将率先在此页面和 X 上公布。",
     "nav.cta": "铸造 <span class=\"hide-m\">· 0.001 BNB</span>",
     "menu.aria": "打开菜单",
     "hero.eyebrow": "<i></i> 2,222 只幽灵 · 铸造进行中",
