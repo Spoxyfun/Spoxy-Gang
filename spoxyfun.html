@@ -386,7 +386,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
           <div><span data-i18n="row.fee">Mint fee</span><b>0.001 BNB</b></div>
           <div><span data-i18n="row.chain">Chain</span><b>BNB Smart Chain</b></div>
           <div><span data-i18n="row.req">Free mint requirement</span><b>Agent ID (free mint only)</b></div>
-          <div><span data-i18n="row.contract">Contract</span><b id="contractLabel" data-i18n="row.contract_v">0x67e5…b2f4</b></div>
+          <div><span data-i18n="row.contract">Contract</span><b id="contractLabel" data-i18n="row.contract_v">0xf814…BaD0</b></div>
         </div>
         <div class="fee-note"><b data-i18n="feenote.b">Fee:</b><span data-i18n="feenote.x">0.001 BNB per mint goes to the contract wallet. Simple, transparent, no surprises.</span></div>
         <div class="agent-status" id="agentStatus" role="status">
@@ -468,13 +468,13 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
       <p class="lead" data-i18n="agent.lead">Agents and bots welcome. Copy the prompt, paste it to your agent, done.</p>
     </div>
     <div class="prompt-box">
-      <pre id="promptMint">Mint 1 SpoxyFun NFT now.
-Contract 0x67e53C0FE454523BA84065589a964E0a5c90b2f4, BNB Chain 56, mint() payable.
-Wallet: [your wallet], holds Binance Agent ID. Execute from my wallet only.
-Value: 0.001 BNB = 1000000000000000 wei + gas. Reply tx link only.</pre>
+      <pre id="promptMint">Mint 1 SpoxyFun V2 NFT from my wallet on BNB Chain (56).
+Contract: 0xf814792B5C3E8b2953AC00CC1F55B21d7B36BaD0.
+Choose ONE: freeMint() costs 0 BNB and requires Agent ID (max 3 per wallet, 800 total); OR mint() costs exactly 0.001 BNB (1000000000000000 wei) + gas and works with or without Agent ID.
+Use only my connected wallet. Mint is currently CLOSED; do not try until I confirm it is open. Reply with transaction link only.</pre>
       <button class="btn btn-lime" id="copyPromptBtn" type="button" data-i18n="agent.copy">Copy prompt</button>
     </div>
-    <p class="prompt-note" data-i18n="agent.note">Mint is live — this prompt works now.</p>
+    <p class="prompt-note" data-i18n="agent.note">V2 deployed. Mint starts closed; owner must open mint before either mint option works.</p>
   </section>
 </main>
 
@@ -496,8 +496,8 @@ Value: 0.001 BNB = 1000000000000000 wei + gas. Reply tx link only.</pre>
 <script>
 /* ============ CONFIG — mint-ready, no fake address ============ */
 const CONFIG = {
-  CONTRACT_ADDRESS: "", // set only after the new V2 contract is deployed
-  AGENT_ID_REGISTRY: "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F", // SPACE ID Agent ID (BNB Chain) — mint requires balanceOf > 0
+  CONTRACT_ADDRESS: "0xf814792B5C3E8b2953AC00CC1F55B21d7B36BaD0", // SpoxyFun V2 on BNB Chain; verified 2026-11-15
+  AGENT_ID_REGISTRY: "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F", // SPACE ID Agent ID (BNB Chain) — required only for freeMint()
   SUPPLY: 2222,
   FEE_BNB: "0.001",
   CHAIN_ID: 56
@@ -531,7 +531,7 @@ const I18N = {
     "stat.fee": "Mint fee",
     "stat.contract": "Contract",
     "stat.feegoes": "Fee goes here",
-    "agent.note": "Mint is live — this prompt works now.",
+    "agent.note": "V2 deployed. Mint starts closed; owner must open mint before either mint option works.",
     "hero.agentnote": "<b>Free mint:</b> requires Agent ID, up to 3 per wallet. Paid mint is open to all wallets.",
     "frame.aria": "SpoxyFun ghost character preview",
     "alt.boo": "Boo, a happy ghost in a purple witch hat holding an orange candy",
@@ -594,7 +594,7 @@ const I18N = {
     "row.chain": "Chain",
     "row.req": "Free mint requirement",
     "row.contract": "Contract",
-    "row.contract_v": "0x67e5…b2f4",
+    "row.contract_v": "0xf814…BaD0",
     "feenote.b": "Fee:",
     "feenote.x": "0.001 BNB per mint goes to the contract wallet. Simple, transparent, no surprises.",
     "mint.btn": "Mint — 0.001 BNB",
@@ -697,7 +697,7 @@ const I18N = {
     "stat.fee": "铸造费用",
     "stat.contract": "合约",
     "stat.feegoes": "费用归合约",
-    "agent.note": "铸造进行中——此提示词现在可用。",
+    "agent.note": "V2 已部署。铸造默认关闭；所有者开启后才能使用免费或付费铸造。",
     "hero.agentnote": "<b>免费铸造：</b>需要 Agent ID，每个钱包最多 3 个。付费铸造对所有钱包开放。",
     "frame.aria": "SpoxyFun 幽灵角色预览",
     "alt.boo": "Boo，一只戴着紫色女巫帽、拿着橙色糖果的开心小幽灵",
@@ -760,7 +760,7 @@ const I18N = {
     "row.chain": "链",
     "row.req": "要求",
     "row.contract": "合约",
-    "row.contract_v": "0x67e5…b2f4",
+    "row.contract_v": "0xf814…BaD0",
     "feenote.b": "费用：",
     "feenote.x": "每次铸造 0.001 BNB 进入合约钱包，简单透明，没有隐藏收费。",
     "mint.btn": "铸造 — 0.001 BNB",
