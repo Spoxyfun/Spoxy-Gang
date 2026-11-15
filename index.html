@@ -1004,13 +1004,17 @@ function tokenIdFromReceipt(rc){
   return null;
 }
 const MINT_STATS_SELECTORS={total:'0xa2309ff8',remaining:'0x55234ec0',free:'0xd10a1a2b',open:'0x24bbd049'};
-const BSC_PUBLIC_RPCS=['https://bsc-dataseed.binance.org/','https://bsc-dataseed1.binance.org/','https://bsc-dataseed2.binance.org/'];
+const BSC_PUBLIC_RPCS=['https://bsc-rpc.publicnode.com','https://bsc-dataseed.binance.org/','https://bsc-dataseed1.binance.org/'];
+const RPC_TIMEOUT_MS=3500;
 let mintStatsBusy=false;
-async function readContractUint(rpc,selector){
-  const res=await fetch(rpc,{method:'POST',headers:{'content-type':'application/json'},cache:'no-store',body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:CONFIG.CONTRACT_ADDRESS,data:selector},'latest']})});
+async function readContractUint(rpc,selector,signal){
+  const res=await fetch(rpc,{method:'POST',headers:{'content-type':'application/json'},cache:'no-store',signal,body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:CONFIG.CONTRACT_ADDRESS,data:selector},'latest']})});
   if(!res.ok)throw new Error('RPC HTTP '+res.status);
   const body=await res.json(); if(body.error)throw new Error(body.error.message||'RPC error');
   return BigInt(body.result||'0x0');
+}
+function ensureMintProgressCells(bar=document.getElementById('mintProgressBar')){
+  if(bar&&!bar.dataset.cellsBuilt){bar.innerHTML=Array.from({length:50},()=>'<i aria-hidden="true"></i>').join('');bar.dataset.cellsBuilt='true';}
 }
 async function refreshMintStats(){
   if(mintStatsBusy||!CONFIG.CONTRACT_ADDRESS)return;
@@ -1018,8 +1022,11 @@ async function refreshMintStats(){
   try{
     let values=null,lastError=null;
     for(const rpc of BSC_PUBLIC_RPCS){
-      try{values=await Promise.all([readContractUint(rpc,MINT_STATS_SELECTORS.total),readContractUint(rpc,MINT_STATS_SELECTORS.remaining),readContractUint(rpc,MINT_STATS_SELECTORS.free),readContractUint(rpc,MINT_STATS_SELECTORS.open)]);break;}
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),RPC_TIMEOUT_MS);
+      try{values=await Promise.all([readContractUint(rpc,MINT_STATS_SELECTORS.total,controller.signal),readContractUint(rpc,MINT_STATS_SELECTORS.remaining,controller.signal),readContractUint(rpc,MINT_STATS_SELECTORS.free,controller.signal),readContractUint(rpc,MINT_STATS_SELECTORS.open,controller.signal)]);break;}
       catch(err){lastError=err;}
+      finally{clearTimeout(timeout);}
     }
     if(!values)throw lastError||new Error('No BNB Chain RPC available');
     const [minted,remaining,freeMinted,isOpen]=values;
@@ -1038,7 +1045,7 @@ async function refreshMintStats(){
     }
     const bar=document.getElementById('mintProgressBar');
     if(bar){
-      if(!bar.dataset.cellsBuilt){bar.innerHTML=Array.from({length:50},()=>'<i aria-hidden="true"></i>').join('');bar.dataset.cellsBuilt='true';}
+      ensureMintProgressCells(bar);
       const cells=bar.querySelectorAll('i');
       const filled=Math.round(Number(minted)*cells.length/2222);
       cells.forEach((cell,index)=>cell.classList.toggle('filled',index<filled));
@@ -1172,6 +1179,7 @@ try{
   preferred = (navigator.language||'en').toLowerCase().startsWith('zh') ? 'zh' : 'en';
 }
 setLang(preferred);
+ensureMintProgressCells();
 refreshMintStats();
 setInterval(refreshMintStats,15000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshMintStats();});
