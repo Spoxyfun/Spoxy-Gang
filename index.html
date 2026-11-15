@@ -355,7 +355,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
     </div>
     <div class="how-grid">
       <div class="steps">
-        <div class="step"><span class="step-n">01</span><div><b data-i18n="step1.t">Connect your wallet</b><span data-i18n="step1.x">Any BNB Chain wallet works. We check your Binance Agent ID on-chain — only holders can mint.</span></div></div>
+        <div class="step"><span class="step-n">01</span><div><b data-i18n="step1.t">Connect your wallet</b><span data-i18n="step1.x">Any BNB Chain wallet works. Free mint checks your Binance Agent ID on-chain — paid mint is open to all wallets.</span></div></div>
         <div class="step"><span class="step-n">02</span><div><b data-i18n="step2.t">Pay the small fee</b><span data-i18n="step2.x">One flat fee per mint — 0.001 BNB. It goes straight to the contract wallet.</span></div></div>
         <div class="step"><span class="step-n">03</span><div><b data-i18n="step3.t">Keep your ghost</b><span data-i18n="step3.x">Your ghost lives in your wallet. Show it off, trade it, or just enjoy the boo.</span></div></div>
       </div>
@@ -459,7 +459,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
       <details><summary data-i18n="q2">How much does it cost to mint?</summary><p data-i18n="a2">0.001 BNB per mint, plus network gas. The mint fee goes to the contract wallet.</p></details>
       <details><summary data-i18n="q3">Which chain is SpoxyFun on?</summary><p data-i18n="a3">BNB Smart Chain (chain 56). Connect with any wallet that supports BNB Chain.</p></details>
       <details><summary data-i18n="q4">Can I pick my ghost?</summary><p data-i18n="a4">No. Each mint draws a random ghost — every mint is a surprise.</p></details>
-      <details><summary data-i18n="q5">Do I need a Binance Agent ID to mint?</summary><p data-i18n="a5">Yes. Minting is exclusive to wallets holding a Binance Agent ID (SPACE ID Agent ID on BNB Chain). After you connect, this page checks your Agent ID balance on-chain. Wallets without one cannot mint — the contract will enforce the same rule.</p></details>
+      <details><summary data-i18n="q5">Do I need a Binance Agent ID to mint?</summary><p data-i18n="a5">An Agent ID is required only for free mint (up to 3 per wallet, first 800 total). Paid mint is available to any wallet, including Agent ID holders, for 0.001 BNB.</p></details>
       <details><summary data-i18n="q6">Is mint live right now?</summary><p data-i18n="a6">Yes — mint is live now. 0.001 BNB per mint, and a Binance Agent ID is required.</p></details>
     </div>
   </section>
@@ -584,7 +584,7 @@ const I18N = {
     "how.eyebrow": "<i></i> How it works",
     "how.h2": "Simple on <em>purpose.</em>",
     "step1.t": "Connect your wallet",
-    "step1.x": "Any BNB Chain wallet works. We check your Binance Agent ID on-chain — only holders can mint.",
+    "step1.x": "Any BNB Chain wallet works. Free mint checks your Binance Agent ID on-chain — paid mint is open to all wallets.",
     "step2.t": "Pay the small fee",
     "step2.x": "One flat fee per mint — 0.001 BNB. It goes straight to the contract wallet.",
     "step3.t": "Keep your ghost",
@@ -626,7 +626,7 @@ const I18N = {
     "status.connect": "Connect your wallet — we will check your Binance Agent ID on-chain.",
     "status.checking": "Checking your Binance Agent ID on-chain…",
     "status.holder": "Binance Agent ID found. This wallet can mint.",
-    "status.none": "No Binance Agent ID on this wallet. Mint is exclusive to Agent ID holders.",
+    "status.none": "No Binance Agent ID on this wallet. Free mint needs one — paid mint is open to you.",
     "status.error": "Could not verify your Agent ID. Check your connection and try reconnecting.",
     "wallet.notconn": "Wallet not connected",
     "wallet.connected": "Connected · BNB Chain",
@@ -760,7 +760,7 @@ const I18N = {
     "how.eyebrow": "<i></i> 玩法",
     "how.h2": "简单，<em>就这么简单。</em>",
     "step1.t": "连接钱包",
-    "step1.x": "任何 BNB Chain 钱包都可以。我们会在链上检查你的币安 Agent ID——只有持有者才能铸造。",
+    "step1.x": "任何 BNB Chain 钱包都可以。免费铸造会在链上检查你的币安 Agent ID——付费铸造向所有钱包开放。",
     "step2.t": "支付小额费用",
     "step2.x": "每次铸造固定费用——0.001 BNB，直接进入合约钱包。",
     "step3.t": "收好你的幽灵",
@@ -802,7 +802,7 @@ const I18N = {
     "status.connect": "连接钱包——我们会在链上检查你的币安 Agent ID。",
     "status.checking": "正在链上检查你的币安 Agent ID…",
     "status.holder": "找到币安 Agent ID。这个钱包可以铸造。",
-    "status.none": "这个钱包没有币安 Agent ID。铸造仅限 Agent ID 持有者。",
+    "status.none": "这个钱包没有币安 Agent ID。免费铸造需要 ID——付费铸造向你开放。",
     "status.error": "无法验证你的 Agent ID。请检查网络连接并重新连接。",
     "wallet.notconn": "钱包未连接",
     "wallet.connected": "已连接 · BNB Chain",
