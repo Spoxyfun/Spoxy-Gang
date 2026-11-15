@@ -211,8 +211,9 @@ section{padding:56px 0 6px}
 .btn:disabled{opacity:.55; cursor:not-allowed}
 .mint-result{margin-top:13px; font-size:14px; line-height:1.55; font-weight:600; color:#2E4300; background:#F1FBE0; border:2.5px solid var(--ink); border-radius:14px; padding:11px 14px}
 .mint-result a{color:#3D1E6D; text-decoration:underline; font-weight:800; white-space:nowrap}
-.segments{display:flex; gap:5px; margin-top:10px}
-.segments i{flex:1; height:13px; background:#E9E0C8; border:2px solid var(--ink); border-radius:4px}
+.segments{display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:5px; margin-top:10px}
+.segments i{aspect-ratio:1; width:100%; background:#E9E0C8; border:2px solid var(--ink); border-radius:4px; transition:background .3s ease,transform .3s ease}
+.segments i.filled{background:#B9E62E; transform:translateY(-1px)}
 .progress-top{display:flex; justify-content:space-between; font-size:11.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#6B6480; margin-top:17px}
 
 /* ---------- TRAITS / FAQ ---------- */
@@ -1037,7 +1038,13 @@ async function refreshMintStats(){
       if(statusEl)statusEl.textContent=isOpen?'Mint open · live':'Mint closed';
     }
     const bar=document.getElementById('mintProgressBar');
-    if(bar){bar.setAttribute('aria-valuenow',String(minted));bar.setAttribute('aria-valuetext',fmt(minted)+' minted of 2,222');}
+    if(bar){
+      if(!bar.dataset.cellsBuilt){bar.innerHTML=Array.from({length:50},()=>'<i aria-hidden="true"></i>').join('');bar.dataset.cellsBuilt='true';}
+      const cells=bar.querySelectorAll('i');
+      const filled=Math.round(Number(minted)*cells.length/2222);
+      cells.forEach((cell,index)=>cell.classList.toggle('filled',index<filled));
+      bar.setAttribute('aria-valuenow',String(minted));bar.setAttribute('aria-valuetext',fmt(minted)+' minted of 2,222');
+    }
   }catch(err){
     const statusEl=document.getElementById('mintChainStatus');
     if(statusEl)statusEl.textContent=LANG==='zh'?'链上数据暂时不可用，正在重试…':'Live data unavailable; retrying…';
