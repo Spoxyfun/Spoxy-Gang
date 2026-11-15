@@ -252,6 +252,16 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
 .why-list{margin-top:12px}
 .why-rarity{margin:16px 0 0; display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-weight:600; font-size:14px; color:var(--ink-soft)}
 .why-rarity b{display:inline-block; background:var(--paper); border:var(--bd); border-radius:999px; box-shadow:var(--sh-sm); padding:5px 11px; color:var(--ink); font-size:13px}
+.rare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
+.rare-card{margin:0;background:var(--paper);border:var(--bd);border-radius:var(--r-md);box-shadow:var(--sh-sm);overflow:hidden}
+.rare-card img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-bottom:var(--bd)}
+.rare-card figcaption{padding:12px 14px 14px;display:grid;gap:3px}
+.rare-card figcaption b{font-size:19px}
+.rare-card figcaption span{font-weight:700;font-size:14px;color:var(--purple2)}
+.rare-card figcaption i{font-style:normal;font-size:12.5px;color:var(--ink-soft);font-weight:600}
+.rare-cta{margin:24px 0 0;text-align:center}
+@media(max-width:760px){.rare-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:400px){.rare-grid{gap:10px}}
 </style>
 </head>
 <body>
@@ -448,6 +458,34 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
     </div>
   </section>
 
+  <!-- RAREST -->
+  <section id="rare" class="wrap reveal">
+    <div class="section-head center">
+      <span class="eyebrow" data-i18n-html="rare.eyebrow"><i></i> The rarest</span>
+      <h2 data-i18n-html="rare.h2">Hunt the <em>rare ones.</em></h2>
+      <p class="lead" data-i18n="rare.lead">39 characters hide among 2,222 ghosts. These four are the hardest to find — every mint is a random draw, and your next ghost could be one of them.</p>
+    </div>
+    <div class="rare-grid">
+      <figure class="rare-card">
+        <img src="nft/images/782.webp" alt="Lantern — SpoxyFun #782" loading="lazy" width="768" height="768">
+        <figcaption><b>Lantern</b><span data-i18n="rare.only_lantern">Only 39 exist</span><i>#782</i></figcaption>
+      </figure>
+      <figure class="rare-card">
+        <img src="nft/images/1587.webp" alt="Scoop — SpoxyFun #1587" loading="lazy" width="768" height="768">
+        <figcaption><b>Scoop</b><span data-i18n="rare.only_scoop">Only 44 exist</span><i>#1587</i></figcaption>
+      </figure>
+      <figure class="rare-card">
+        <img src="nft/images/804.webp" alt="Balloon — SpoxyFun #804" loading="lazy" width="768" height="768">
+        <figcaption><b>Balloon</b><span data-i18n="rare.only_balloon">Only 45 exist</span><i>#804</i></figcaption>
+      </figure>
+      <figure class="rare-card">
+        <img src="nft/images/4.webp" alt="Wand — SpoxyFun #4" loading="lazy" width="768" height="768">
+        <figcaption><b>Wand</b><span data-i18n="rare.only_wand">Only 46 exist</span><i>#4</i></figcaption>
+      </figure>
+    </div>
+    <p class="rare-cta"><a class="btn btn-lime" href="#mint" data-i18n="rare.cta">Mint a Ghost →</a></p>
+  </section>
+
   <!-- FAQ -->
   <section id="faq" class="wrap reveal">
     <div class="section-head center">
@@ -609,6 +647,14 @@ const I18N = {
     "why.rare": "Rare · 775",
     "why.common": "Common · 996",
     "soldout.free": "Free mints sold out — 800/800 claimed.",
+    "rare.eyebrow": "<i></i> The rarest",
+    "rare.h2": "Hunt the <em>rare ones.</em>",
+    "rare.lead": "39 characters hide among 2,222 ghosts. These four are the hardest to find — every mint is a random draw, and your next ghost could be one of them.",
+    "rare.only_lantern": "Only 39 exist",
+    "rare.only_scoop": "Only 44 exist",
+    "rare.only_balloon": "Only 45 exist",
+    "rare.only_wand": "Only 46 exist",
+    "rare.cta": "Mint a Ghost →",
     "mint.status": "<i></i> Mint is live",
     "mint.h3": "Mint a Spoxy Ghost",
     "mint.p": "Mint is live. Connect your wallet and mint directly, or let your agent mint with the prompt below.",
@@ -787,6 +833,14 @@ const I18N = {
     "why.rare": "稀有 · 775",
     "why.common": "普通 · 996",
     "soldout.free": "免费名额已售罄——800/800 全部领完。",
+    "rare.eyebrow": "<i></i> 最稀有",
+    "rare.h2": "寻找<em>稀有幽灵。</em>",
+    "rare.lead": "2,222 只幽灵中有 39 个角色。这四只是最难抽到的——每次铸造都是随机抽取，下一只可能就是它们之一。",
+    "rare.only_lantern": "仅存 39 只",
+    "rare.only_scoop": "仅存 44 只",
+    "rare.only_balloon": "仅存 45 只",
+    "rare.only_wand": "仅存 46 只",
+    "rare.cta": "铸造一只幽灵 →",
     "mint.status": "<i></i> 铸造进行中",
     "mint.h3": "铸造一只 Spoxy 幽灵",
     "mint.p": "铸造进行中——连接钱包直接铸造，或让你的 agent 用下面的提示词铸造。",
