@@ -272,6 +272,33 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
 .mine-grid:empty{display:none}
 .mine-share{margin-top:18px}
 #mineShare[hidden]{display:none}
+.market-panel{background:var(--purple);border:3px solid var(--ink);border-radius:36px;box-shadow:var(--sh-lg);padding:clamp(28px,4.5vw,48px);color:#FFF6E5;position:relative;overflow:hidden}
+.market-panel::before{content:"";position:absolute;width:380px;height:380px;border-radius:50%;background:rgba(185,230,46,.15);right:-120px;top:-150px}
+.market-panel::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,158,187,.16);left:-110px;bottom:-140px}
+.market-soon{position:absolute;right:16px;bottom:2px;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(90px,16vw,190px);line-height:1;letter-spacing:-.03em;color:transparent;-webkit-text-stroke:2px rgba(255,246,229,.14);pointer-events:none;user-select:none}
+.market-head{position:relative;max-width:660px}
+.market-head .eyebrow{background:rgba(255,255,255,.1);color:#fff;border-color:#fff;box-shadow:3px 3px 0 rgba(0,0,0,.4)}
+.market-head .eyebrow i{background:var(--lime);border-color:#fff}
+.market-head h2{color:#fff}
+.market-head h2 em{color:var(--lime)}
+.market-head .lead{color:#D9CDEF}
+.market-stats{position:relative;display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.market-stats div{flex:1;min-width:130px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.35);border-radius:18px;padding:14px 16px}
+.market-stats b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:30px;color:#fff}
+.market-stats span{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#D9CDEF}
+.market-grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.market-card{position:relative;transform:rotate(-1.2deg)}
+.market-card:nth-child(2){transform:rotate(.8deg)}
+.market-card:nth-child(3){transform:rotate(-.6deg)}
+.market-card figcaption b{color:var(--ink)}
+.market-tag{position:absolute;top:12px;left:12px;z-index:2;background:var(--lime);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:5px 11px;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;box-shadow:2px 2px 0 var(--ink)}
+.market-buy{display:block;width:calc(100% - 28px);margin:0 14px 14px;padding:11px;border:2.5px solid var(--ink);border-radius:999px;background:#EFE9DC;color:var(--ink-soft);font:inherit;font-weight:700;font-size:14.5px;cursor:not-allowed}
+.market-pills{position:relative;margin:24px 0 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:600;font-size:14px;color:#D9CDEF}
+.market-pills b{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:7px 13px;font-size:13.5px}
+.market-ctas{position:relative;display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.market-note{position:relative;margin:16px 0 0;font-size:13.5px;color:#D9CDEF;font-weight:600}
+@media(max-width:760px){.market-grid{grid-template-columns:1fr 1fr}.market-card{transform:none}}
+@media(max-width:480px){.market-grid{grid-template-columns:1fr}}
 .mine-note{margin:14px 0 0;font-size:13px;color:var(--ink-soft);font-weight:600}
 .mine-jump{margin:14px 0 0;font-weight:700}
 @media(max-width:760px){.mine-grid{grid-template-columns:repeat(2,1fr)}}
@@ -462,6 +489,49 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
     </div>
   </section>
 
+  <!-- MARKETPLACE -->
+  <section id="market" class="wrap reveal">
+    <div class="market-panel">
+      <span class="market-soon" aria-hidden="true">SOON</span>
+      <div class="market-head">
+        <span class="eyebrow" data-i18n-html="mk.eyebrow"><i></i> Marketplace · Coming soon</span>
+        <h2 data-i18n-html="mk.h2">Trade your <em>ghosts.</em></h2>
+        <p class="lead" data-i18n="mk.lead">SpoxyFun's own marketplace is on the way — buy and sell ghosts right here, without leaving the site. Mint now, and your ghost will be ready to list.</p>
+      </div>
+      <div class="market-stats">
+        <div><b>—</b><span data-i18n="mk.floor">Floor price</span></div>
+        <div><b>—</b><span data-i18n="mk.listed">Listed</span></div>
+        <div><b>—</b><span data-i18n="mk.volume">Volume</span></div>
+      </div>
+      <div class="market-grid">
+        <figure class="rare-card market-card">
+          <span class="market-tag" data-i18n="mk.preview">Preview</span>
+          <img src="nft/images/782.webp" alt="Lantern — SpoxyFun #782" loading="lazy" width="768" height="768">
+          <figcaption><b>Lantern</b><span data-i18n="rare.only_lantern">Only 39 exist</span><i>#782</i></figcaption>
+          <button class="market-buy" type="button" disabled data-i18n="mk.buysoon">Buy — soon</button>
+        </figure>
+        <figure class="rare-card market-card">
+          <span class="market-tag" data-i18n="mk.preview">Preview</span>
+          <img src="nft/images/1587.webp" alt="Scoop — SpoxyFun #1587" loading="lazy" width="768" height="768">
+          <figcaption><b>Scoop</b><span data-i18n="rare.only_scoop">Only 44 exist</span><i>#1587</i></figcaption>
+          <button class="market-buy" type="button" disabled data-i18n="mk.buysoon">Buy — soon</button>
+        </figure>
+        <figure class="rare-card market-card">
+          <span class="market-tag" data-i18n="mk.preview">Preview</span>
+          <img src="nft/images/804.webp" alt="Balloon — SpoxyFun #804" loading="lazy" width="768" height="768">
+          <figcaption><b>Balloon</b><span data-i18n="rare.only_balloon">Only 45 exist</span><i>#804</i></figcaption>
+          <button class="market-buy" type="button" disabled data-i18n="mk.buysoon">Buy — soon</button>
+        </figure>
+      </div>
+      <p class="market-pills"><span data-i18n="mk.planned">Planned:</span> <b data-i18n="mk.p1">Buy &amp; sell here</b> <b data-i18n="mk.p2">Rarity filters</b> <b data-i18n="mk.p3">BNB settlement</b> <b data-i18n="mk.p4">Your wallet, your ghost</b></p>
+      <div class="market-ctas">
+        <a class="btn btn-lime" href="#mint" data-i18n="mk.cta1">Mint a ghost →</a>
+        <a class="btn btn-dark" href="https://x.com/SpoxyGang" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span data-i18n="mk.cta2">Follow @SpoxyGang</span></a>
+      </div>
+      <p class="market-note" data-i18n="mk.note">Trading opens soon — the launch will be announced here and on X first. No listings yet; the cards above are a preview.</p>
+    </div>
+  </section>
+
   <!-- STAKE -->
   <section id="stake" class="wrap reveal">
     <div class="section-head">
@@ -629,6 +699,22 @@ const I18N = {
     "mine.one": "1 ghost found.",
     "mine.many": "{n} ghosts found.",
     "mine.offline": "Could not load ghost data. Check your connection and try again.",
+    "mk.eyebrow": "<i></i> Marketplace · Coming soon",
+    "mk.h2": "Trade your <em>ghosts.</em>",
+    "mk.lead": "SpoxyFun's own marketplace is on the way — buy and sell ghosts right here, without leaving the site. Mint now, and your ghost will be ready to list.",
+    "mk.floor": "Floor price",
+    "mk.listed": "Listed",
+    "mk.volume": "Volume",
+    "mk.preview": "Preview",
+    "mk.buysoon": "Buy — soon",
+    "mk.planned": "Planned:",
+    "mk.p1": "Buy & sell here",
+    "mk.p2": "Rarity filters",
+    "mk.p3": "BNB settlement",
+    "mk.p4": "Your wallet, your ghost",
+    "mk.cta1": "Mint a ghost →",
+    "mk.cta2": "Follow @SpoxyGang",
+    "mk.note": "Trading opens soon — the launch will be announced here and on X first. No listings yet; the cards above are a preview.",
     "nav.cta": "Mint <span class=\"hide-m\">· 0.001 BNB</span>",
     "menu.aria": "Open menu",
     "hero.eyebrow": "<i></i> 2,222 ghosts · Mint is live",
@@ -839,6 +925,22 @@ const I18N = {
     "mine.one": "找到 1 只幽灵。",
     "mine.many": "找到 {n} 只幽灵。",
     "mine.offline": "无法加载幽灵数据，请检查网络后重试。",
+    "mk.eyebrow": "<i></i> 交易市场 · 即将上线",
+    "mk.h2": "交易你的<em>幽灵。</em>",
+    "mk.lead": "SpoxyFun 自己的交易市场即将到来——无需离开本站，即可买卖幽灵。现在铸造，你的幽灵到时即可上架。",
+    "mk.floor": "地板价",
+    "mk.listed": "上架中",
+    "mk.volume": "交易量",
+    "mk.preview": "预览",
+    "mk.buysoon": "即将可买",
+    "mk.planned": "计划中：",
+    "mk.p1": "站内买卖",
+    "mk.p2": "稀有度筛选",
+    "mk.p3": "BNB 结算",
+    "mk.p4": "你的钱包，你的幽灵",
+    "mk.cta1": "铸造幽灵 →",
+    "mk.cta2": "关注 @SpoxyGang",
+    "mk.note": "交易即将开放——上线消息将率先在此页面和 X 上公布。目前尚无挂单，上方卡片仅为预览。",
     "nav.cta": "铸造 <span class=\"hide-m\">· 0.001 BNB</span>",
     "menu.aria": "打开菜单",
     "hero.eyebrow": "<i></i> 2,222 只幽灵 · 铸造进行中",
