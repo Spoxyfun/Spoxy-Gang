@@ -581,7 +581,7 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
       <p class="stake-feedback" id="stakeFeedback" role="status" aria-live="polite" data-i18n="stake.disabled_note">Transactions are unavailable until the staking contract is deployed and configured.</p>
     </div>
     <p class="why-rarity"><span data-i18n="stake.pills_label">Planned:</span> <b data-i18n="stake.pill_token">Reward token · $WISP</b> <b data-i18n="stake.pill_rate">Daily rate · 10 $WISP</b> <b data-i18n="stake.pill_fee">Claim fee · 0.0001 BNB</b> <b data-i18n="stake.pill_paid">Paid ghosts · 50 $WISP/day</b></p>
-    <p class="prompt-note" data-i18n="stake.note">The campaign runs for seven days. Staking contract deployment and address configuration are still pending.</p>
+    <p class="prompt-note" data-i18n="stake.note">Campaign is LIVE. It started Nov 16, 2026 (WIB) and ends Nov 23, 2026 at 01:02 WIB. Stake/unstake/claim costs 0.0001 BNB per transaction; batch counts as one.</p>
   </section>
 
   <!-- TRAITS -->
@@ -686,10 +686,10 @@ Call mint() with 0.001 BNB (1000000000000000 wei) plus gas. No Agent ID needed. 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ============ CONFIG — mint-ready, no fake address ============ */
+/* ============ CONFIG — live contracts verified on BNB Chain (56) ============ */
 const CONFIG = {
-  STAKING_ADDRESS: "", // Set only after the staking contract is deployed
-  WISP_ADDRESS: "", // Set only after the reward token is deployed
+  STAKING_ADDRESS: "0x364867847ee1B329d56CFe37d704A7763b4dAbB9", // SpoxyStaking7Day; on-chain campaign active
+  WISP_ADDRESS: "0xa08bfA9ba26f23fc53a636b3309A198F9c61c388", // Fixed 2,500,000 WISP token; on-chain verified
   CONTRACT_ADDRESS: "0xf814792B5C3E8b2953AC00CC1F55B21d7B36BaD0", // SpoxyFun V2 on BNB Chain; verified 2026-11-15
   AGENT_ID_REGISTRY: "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F", // SPACE ID Agent ID (BNB Chain) — required only for freeMint()
   SUPPLY: 2222,
@@ -710,7 +710,7 @@ const I18N = {
     "w.faq": "FAQ",
     "nav.stake": "Stake",
     "stake.eyebrow": "<i></i> Stake · 7-day WISP campaign",
-    "stake.panel_title": "Staking dashboard", "stake.panel_intro": "Connect your wallet to check rewards and manage your ghosts.", "stake.approve_title": "One-time NFT approval", "stake.approve_help": "Approve the staking contract to hold your NFT while it is staked. Approval has no app fee; wallet gas applies.", "stake.approve": "Approve staking contract", "stake.not_configured": "Contract not configured", "stake.connect": "Connect", "stake.refresh": "Refresh", "stake.ids_label": "Token IDs to stake", "stake.unstake_label": "Token IDs to unstake", "stake.ids_help": "Enter comma-separated token IDs. One 0.0001 BNB fee per transaction, including a batch.", "stake.stake_btn": "Stake selected", "stake.unstake_btn": "Unstake selected", "stake.pending_label": "Estimated pending rewards", "stake.pending_hint": "Shown only when a staking contract address is configured.", "stake.claim_help": "Claim available rewards. Claim fee: 0.0001 BNB per transaction.", "stake.claim": "Claim rewards", "stake.disabled_note": "Transactions are unavailable until the staking contract is deployed and configured.", "stake.wallet_connected": "Wallet connected", "stake.wrong_chain": "Switch wallet to BNB Chain (56).", "stake.invalid_ids": "Enter token IDs from 1 to 2,222 with no duplicates.", "stake.sending": "Confirm the transaction in your wallet…", "stake.sent": "Transaction confirmed.", "stake.refresh_done": "Status refreshed. Contract address is not configured yet.", "stake.no_wallet": "No compatible wallet detected.", "stake.failed": "Could not complete the action. Check your wallet and try again.",
+    "stake.panel_title": "Staking dashboard", "stake.panel_intro": "Connect your wallet to check rewards and manage your ghosts.", "stake.approve_title": "One-time NFT approval", "stake.approve_help": "Approve the staking contract to hold your NFT while it is staked. Approval has no app fee; wallet gas applies.", "stake.approve": "Approve staking contract", "stake.not_configured": "Contract not configured", "stake.contract_live": "Staking live · BNB Chain", "stake.connect": "Connect", "stake.refresh": "Refresh", "stake.ids_label": "Token IDs to stake", "stake.unstake_label": "Token IDs to unstake", "stake.ids_help": "Enter comma-separated token IDs. One 0.0001 BNB fee per transaction, including a batch.", "stake.stake_btn": "Stake selected", "stake.unstake_btn": "Unstake selected", "stake.pending_label": "Estimated pending rewards", "stake.pending_hint": "Shown only when a staking contract address is configured.", "stake.claim_help": "Claim available rewards. Claim fee: 0.0001 BNB per transaction.", "stake.claim": "Claim rewards", "stake.disabled_note": "Transactions are unavailable until the staking contract is deployed and configured.", "stake.wallet_connected": "Wallet connected", "stake.wrong_chain": "Switch wallet to BNB Chain (56).", "stake.invalid_ids": "Enter token IDs from 1 to 2,222 with no duplicates.", "stake.sending": "Confirm the transaction in your wallet…", "stake.sent": "Transaction confirmed.", "stake.refresh_done": "Status refreshed. Contract address is not configured yet.", "stake.no_wallet": "No compatible wallet detected.", "stake.failed": "Could not complete the action. Check your wallet and try again.",
     "stake.h2": "Stake your ghost. <em>Earn rewards.</em>",
     "stake.lead": "Earn $WISP for up to 7 days. Stake and unstake whenever; rewards depend on whether your NFT was minted free or paid.",
     "stake.s1t": "Stake your ghost",
@@ -724,7 +724,7 @@ const I18N = {
     "stake.pill_rate": "Free · 10 / paid · 50 WISP/day",
     "stake.pill_fee": "Fee · 0.0001 BNB per transaction",
     "stake.pill_paid": "Paid ghosts · 50 $WISP/day",
-    "stake.note": "Staking opens after mint ends. Full details will be announced here and on X first.",
+    "stake.note": "Campaign is live. It ends Nov 23, 2026 at 01:02 WIB. Each stake, unstake, or claim costs 0.0001 BNB per transaction; batch pays once.",
     "mine.eyebrow": "<i></i> My Ghosts",
     "mine.h2": "See your <em>ghosts.</em>",
     "mine.lead": "Paste any wallet address to see its SpoxyFun ghosts — then share them on X.",
@@ -937,7 +937,7 @@ const I18N = {
     "w.faq": "常见问题",
     "nav.stake": "质押",
     "stake.eyebrow": "<i></i> 质押 · 7 天 WISP 活动",
-    "stake.panel_title": "质押面板", "stake.panel_intro": "连接钱包以查看奖励并管理幽灵。", "stake.approve_title": "一次性 NFT 授权", "stake.approve_help": "授权质押合约在质押期间保管 NFT。授权不收取平台手续费，但需支付钱包 gas。", "stake.approve": "授权质押合约", "stake.not_configured": "合约尚未配置", "stake.connect": "连接钱包", "stake.refresh": "刷新", "stake.ids_label": "要质押的代币 ID", "stake.unstake_label": "要解除质押的代币 ID", "stake.ids_help": "输入逗号分隔的代币 ID。每笔交易（含批量）仅收取一次 0.0001 BNB。", "stake.stake_btn": "质押所选", "stake.unstake_btn": "解除所选质押", "stake.pending_label": "预估待领取奖励", "stake.pending_hint": "配置质押合约地址后才会显示。", "stake.claim_help": "领取可用奖励。每笔领取交易费用：0.0001 BNB。", "stake.claim": "领取奖励", "stake.disabled_note": "质押合约部署并配置前，交易功能不可用。", "stake.wallet_connected": "钱包已连接", "stake.wrong_chain": "请将钱包切换至 BNB Chain（56）。", "stake.invalid_ids": "请输入 1 至 2,222 的代币 ID，且不能重复。", "stake.sending": "请在钱包中确认交易…", "stake.sent": "交易已确认。", "stake.refresh_done": "状态已刷新。质押合约地址尚未配置。", "stake.no_wallet": "未检测到兼容的钱包。", "stake.failed": "操作失败，请检查钱包后重试。",
+    "stake.panel_title": "质押面板", "stake.panel_intro": "连接钱包以查看奖励并管理幽灵。", "stake.approve_title": "一次性 NFT 授权", "stake.approve_help": "授权质押合约在质押期间保管 NFT。授权不收取平台手续费，但需支付钱包 gas。", "stake.approve": "授权质押合约", "stake.not_configured": "合约尚未配置", "stake.contract_live": "质押已上线 · BNB Chain", "stake.connect": "连接钱包", "stake.refresh": "刷新", "stake.ids_label": "要质押的代币 ID", "stake.unstake_label": "要解除质押的代币 ID", "stake.ids_help": "输入逗号分隔的代币 ID。每笔交易（含批量）仅收取一次 0.0001 BNB。", "stake.stake_btn": "质押所选", "stake.unstake_btn": "解除所选质押", "stake.pending_label": "预估待领取奖励", "stake.pending_hint": "配置质押合约地址后才会显示。", "stake.claim_help": "领取可用奖励。每笔领取交易费用：0.0001 BNB。", "stake.claim": "领取奖励", "stake.disabled_note": "质押合约部署并配置前，交易功能不可用。", "stake.wallet_connected": "钱包已连接", "stake.wrong_chain": "请将钱包切换至 BNB Chain（56）。", "stake.invalid_ids": "请输入 1 至 2,222 的代币 ID，且不能重复。", "stake.sending": "请在钱包中确认交易…", "stake.sent": "交易已确认。", "stake.refresh_done": "状态已刷新。质押合约地址尚未配置。", "stake.no_wallet": "未检测到兼容的钱包。", "stake.failed": "操作失败，请检查钱包后重试。",
     "stake.h2": "质押你的幽灵，<em>赚取奖励。</em>",
     "stake.lead": "最多赚取 7 天 $WISP。可随时质押或解除质押；奖励取决于 NFT 是免费铸造还是付费铸造。",
     "stake.s1t": "质押你的幽灵",
@@ -951,7 +951,7 @@ const I18N = {
     "stake.pill_rate": "免费 10 · 付费 50 $WISP/天",
     "stake.pill_fee": "手续费 · 每笔 0.0001 BNB",
     "stake.pill_paid": "付费幽灵 · 每天 50 $WISP",
-    "stake.note": "活动持续七天。质押合约尚未部署并配置地址。",
+    "stake.note": "活动已开始，将于 2026 年 11 月 23 日 01:02（WIB）结束。每笔质押、解除质押或领取交易收费 0.0001 BNB；批量操作每笔只收一次。",
     "mine.eyebrow": "<i></i> 我的幽灵",
     "mine.h2": "看看你的<em>幽灵。</em>",
     "mine.lead": "粘贴任意钱包地址，查看它的 SpoxyFun 幽灵，然后分享到 X。",
@@ -1602,7 +1602,7 @@ document.getElementById('mineInput').addEventListener('keydown',function(e){ if(
  const parseIds=id=>{const raw=$(id).value.trim(); if(!raw)throw Error('ids');const parts=raw.split(',').map(x=>x.trim());if(parts.some(x=>!/^\d+$/.test(x)))throw Error('ids');const nums=parts.map(BigInt);if(nums.some(x=>x<1n||x>2222n)||new Set(nums.map(String)).size!==nums.length)throw Error('ids');return nums;};
  const word=n=>n.toString(16).padStart(64,'0');
  const arrayData=(sig,ids)=>sig+word(32)+word(ids.length)+ids.map(word).join('');
- const update=()=>{const ok=configured();$('stakeState').dataset.ready=ok?'true':'false';$('stakeState').textContent=ok?t('stake.wallet_connected'):t('stake.not_configured');['stakeApprove','stakeSubmit','unstakeSubmit','stakeClaim'].forEach(id=>$(id).disabled=!ok);$('stakePending').textContent='—'; if(!ok)setMsg('stake.disabled_note');};
+ const update=()=>{const ok=configured();$('stakeState').dataset.ready=ok?'true':'false';$('stakeState').textContent=ok?t('stake.contract_live'):t('stake.not_configured');['stakeApprove','stakeSubmit','unstakeSubmit','stakeClaim'].forEach(id=>$(id).disabled=!ok);$('stakePending').textContent='—'; if(!ok)setMsg('stake.disabled_note');};
  async function connected(){if(!window.ethereum)throw Error('wallet');const a=await window.ethereum.request({method:'eth_requestAccounts'});if(!a||!a[0])throw Error('wallet');return a[0];}
  async function chain(){let c=await window.ethereum.request({method:'eth_chainId'});if(Number(c)!==56){try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]});}catch(_){throw Error('chain');}}}
  async function sendTx(to,data,value){const from=await connected();await chain();setMsg('stake.sending');const tx=await window.ethereum.request({method:'eth_sendTransaction',params:[{from,to,data,value}]});const poll=async()=>{let r=await window.ethereum.request({method:'eth_getTransactionReceipt',params:[tx]});if(!r){setTimeout(poll,1800);return;}setMsg(r.status==='0x1'?'stake.sent':'stake.failed');};poll();}
