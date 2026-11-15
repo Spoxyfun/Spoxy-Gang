@@ -976,8 +976,9 @@ connectBtn.addEventListener('click',async()=>{
    on slow connections). mint() takes no args: data is just the selector,
    value is exactly 0.001 BNB = 1000000000000000 wei. No approvals needed. */
 const MINT_SELECTOR='0x1249c58b'; // mint()
+const FREE_MINT_SELECTOR='0x5b70ea9f'; // freeMint()
 const MINT_OPEN_SELECTOR='0x24bbd049'; // mintOpen()
-const MINT_VALUE_HEX='0x5af3107a4000'; // 1000000000000000 wei
+const MINT_VALUE_HEX='0x38d7ea4c68000'; // 1000000000000000 wei = 0.001 BNB
 const TRANSFER_TOPIC='0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 let minting=false;
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
