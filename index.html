@@ -239,6 +239,13 @@ details p{color:var(--ink-soft); line-height:1.65; margin:11px 0 2px; font-size:
 .soon-pill{display:inline-flex; align-items:center; min-height:54px; padding:0 26px; border-radius:999px; background:#fff; border:3px solid var(--ink); box-shadow:3px 3px 0 var(--ink); font-weight:700; font-size:16px; white-space:nowrap}
 .prompt-box{max-width:760px; margin:0 auto; background:var(--ink); border:3px solid var(--ink); border-radius:24px; box-shadow:var(--sh-lg); padding:22px 22px 18px}
 .prompt-box pre{margin:0 0 16px; color:#FFF6E5; font:15px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; white-space:pre-wrap; word-break:break-word}
+.stake-agent{margin-top:28px}
+.stake-agent h3{font-size:22px;text-align:center;margin:0 0 6px}
+.stake-agent-lead{text-align:center;color:#6B5D4F;margin:0 0 18px;font-size:15px}
+.stake-agent .prompt-box{margin:0 auto 16px}
+.stake-agent .prompt-box:last-child{margin-bottom:0}
+.prompt-label{display:inline-block;color:#B8F135;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+
 .prompt-note{max-width:640px; margin:16px auto 0; text-align:center; color:var(--ink-soft); font-size:14.5px; line-height:1.55}
 footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44px}
 .foot{display:flex; justify-content:space-between; gap:22px; flex-wrap:wrap; align-items:center}
@@ -582,7 +589,34 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
     </div>
     <p class="why-rarity"><span data-i18n="stake.pills_label">Planned:</span> <b data-i18n="stake.pill_token">Reward token · $WISP</b> <b data-i18n="stake.pill_rate">Daily rate · 10 $WISP</b> <b data-i18n="stake.pill_fee">Claim fee · 0.0001 BNB</b> <b data-i18n="stake.pill_paid">Paid ghosts · 50 $WISP/day</b></p>
     <p class="prompt-note" data-i18n="stake.note">Campaign is LIVE. It started Nov 16, 2026 (WIB) and ends Nov 23, 2026 at 01:02 WIB. Stake/unstake/claim costs 0.0001 BNB per transaction; batch counts as one.</p>
-  </section>
+      <div class="stake-agent">
+      <h3 data-i18n="stake.ap_h">Agent prompts</h3>
+      <p class="stake-agent-lead" data-i18n="stake.ap_lead">Paste one of these to your agent — it finds your ghosts itself. No token IDs to type.</p>
+      <div class="prompt-box">
+        <span class="prompt-label" data-i18n="stake.ap_stake">Stake</span>
+        <pre id="promptStake">Stake all my SpoxyFun NFTs now from my connected wallet on BNB Chain (56).
+NFT: 0xf814792B5C3E8b2953AC00CC1F55B21d7B36BaD0. Staking: 0x364867847ee1B329d56CFe37d704A7763b4dAbB9.
+First approve the staking contract with setApprovalForAll(staking, true) on the NFT contract.
+Then find every ghost ID currently in my wallet and call stakeMany([ids]) with 0.0001 BNB (100000000000000 wei) plus gas. Return the transaction link.</pre>
+        <button class="btn btn-lime" id="copyStakePromptBtn" type="button" data-i18n="agent.copy">Copy prompt</button>
+      </div>
+      <div class="prompt-box">
+        <span class="prompt-label" data-i18n="stake.ap_unstake">Unstake</span>
+        <pre id="promptUnstake">Unstake all my staked SpoxyFun NFTs now from my connected wallet on BNB Chain (56).
+Staking: 0x364867847ee1B329d56CFe37d704A7763b4dAbB9.
+Find every ghost ID currently staked by my wallet in this contract (stakedBy == my address) and call unstakeMany([ids]) with 0.0001 BNB (100000000000000 wei) plus gas. Return the transaction link.</pre>
+        <button class="btn btn-lime" id="copyUnstakePromptBtn" type="button" data-i18n="agent.copy">Copy prompt</button>
+      </div>
+      <div class="prompt-box">
+        <span class="prompt-label" data-i18n="stake.ap_claim">Claim</span>
+        <pre id="promptClaim">Claim my pending $WISP rewards now from my connected wallet on BNB Chain (56).
+Staking: 0x364867847ee1B329d56CFe37d704A7763b4dAbB9.
+First check pending(my wallet); if it is greater than 0, call claim() with 0.0001 BNB (100000000000000 wei) plus gas.
+Return the transaction link.</pre>
+        <button class="btn btn-lime" id="copyClaimPromptBtn" type="button" data-i18n="agent.copy">Copy prompt</button>
+      </div>
+    </div>
+</section>
 
   <!-- TRAITS -->
   <section id="traits" class="wrap reveal">
@@ -725,6 +759,11 @@ const I18N = {
     "stake.pill_fee": "Fee · 0.0001 BNB per transaction",
     "stake.pill_paid": "Paid ghosts · 50 $WISP/day",
     "stake.note": "Campaign is live. It ends Nov 23, 2026 at 01:02 WIB. Each stake, unstake, or claim costs 0.0001 BNB per transaction; batch pays once.",
+    "stake.ap_h": "Agent prompts",
+    "stake.ap_lead": "Paste one of these to your agent — it finds your ghosts itself. No token IDs to type.",
+    "stake.ap_stake": "Stake",
+    "stake.ap_unstake": "Unstake",
+    "stake.ap_claim": "Claim",
     "mine.eyebrow": "<i></i> My Ghosts",
     "mine.h2": "See your <em>ghosts.</em>",
     "mine.lead": "Paste any wallet address to see its SpoxyFun ghosts — then share them on X.",
@@ -952,6 +991,11 @@ const I18N = {
     "stake.pill_fee": "手续费 · 每笔 0.0001 BNB",
     "stake.pill_paid": "付费幽灵 · 每天 50 $WISP",
     "stake.note": "活动已开始，将于 2026 年 11 月 23 日 01:02（WIB）结束。每笔质押、解除质押或领取交易收费 0.0001 BNB；批量操作每笔只收一次。",
+    "stake.ap_h": "Agent 提示词",
+    "stake.ap_lead": "把其中一条发给你的 Agent——它会自己找到你的幽灵，无需手动输入编号。",
+    "stake.ap_stake": "质押",
+    "stake.ap_unstake": "解除质押",
+    "stake.ap_claim": "领取",
     "mine.eyebrow": "<i></i> 我的幽灵",
     "mine.h2": "看看你的<em>幽灵。</em>",
     "mine.lead": "粘贴任意钱包地址，查看它的 SpoxyFun 幽灵，然后分享到 X。",
@@ -1460,7 +1504,7 @@ document.getElementById('copyPromptBtn')?.addEventListener('click',async()=>{
   try{await navigator.clipboard.writeText(txt);toast(t('toast.copied'));}
   catch(e){toast(t('toast.copyfail'));}
 });
-if(window.ethereum){
+[['copyStakePromptBtn','promptStake'],['copyUnstakePromptBtn','promptUnstake'],['copyClaimPromptBtn','promptClaim']].forEach(([b,p])=>{document.getElementById(b)?.addEventListener('click',async()=>{const txt=document.getElementById(p).innerText;try{await navigator.clipboard.writeText(txt);toast(t('toast.copied'));}catch(e){toast(t('toast.copyfail'));}});}); if(window.ethereum){
   window.ethereum.on?.('accountsChanged',accs=>{
     if(!accs.length){
       account=null; agentIdStatus='unknown';
