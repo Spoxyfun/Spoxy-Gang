@@ -54,9 +54,10 @@
     <p><label class="lbl" for="base-uri">Metadata base URI (optional now — can be set or changed later in step 03). Must end with a slash, e.g. https://your-host.com/nft/metadata/</label><input id="base-uri" class="mono txt" type="text" placeholder="https://your-host.com/nft/metadata/" /></p>
     <ul>
       <li><b>Supply:</b> 2,222 — token IDs 1–2,222. Each mint assigns a random unminted ID (random draw, the minter cannot pick an ID).</li>
-      <li><b>Mint:</b> 0.0001 BNB — one price for all token IDs 1–2,222.</li>
+      <li><b>Free mint:</b> max 800 total; Agent ID required; max 3 per wallet.</li>
+      <li><b>Paid mint:</b> available immediately to any wallet, including Agent ID holders, at 0.001 BNB each.</li>
       <li><b>Fees</b> stay in the contract until the owner withdraws them.</li>
-      <li><b>Agent ID gate:</b> the minter must hold at least one Binance Agent ID from the registry above. No whitelist.</li>
+      <li><b>Agent ID:</b> required only for free mint. Agent ID holders may also choose paid mint.</li>
       <li><b>Mint starts CLOSED.</b> Open it in step 03 when the web and metadata hosting are ready.</li>
       <li><b>Artwork:</b> tokenURI returns base URI + token ID + ".json", pointing at the hosted metadata folder (2,222 images + metadata files). While the base URI is empty, tokenURI returns an empty string.</li>
     </ul>
@@ -161,7 +162,7 @@ async function deploy() {
     $("btn-close").disabled = false;
     $("btn-set-base").disabled = false;
     $("btn-withdraw").disabled = false;
-    $("summary").value = "SpoxyFun deployed on BNB Chain (56).\nContract: " + addr + "\nOwner: " + state.account + "\nAgent ID registry: " + registry + "\nBase URI: " + (baseURI || "(empty)") + "\nDeploy tx: " + c.deploymentTransaction().hash + "\nSupply: 2222, one mint price: 0.0001 BNB for all IDs, random ID draw\nMint requires a Binance Agent ID from the registry above.\nMint starts CLOSED — open it from the deploy page when ready.";
+    $("summary").value = "SpoxyFun deployed on BNB Chain (56).\nContract: " + addr + "\nOwner: " + state.account + "\nAgent ID registry: " + registry + "\nBase URI: " + (baseURI || "(empty)") + "\nDeploy tx: " + c.deploymentTransaction().hash + "\nSupply: 2222; up to 800 free mints (max 3 per wallet, Agent ID required); paid mint 0.001 BNB and open to all wallets, including Agent ID holders; random ID draw.\nMint starts CLOSED — open it from the deploy page when ready.";
     log("SpoxyFun deployed at " + addr, "ok");
     await refresh();
   } catch (e) {
@@ -179,17 +180,19 @@ async function refresh() {
     var remaining = await c.remaining();
     var open = await c.mintOpen();
     var price = await c.currentPrice();
+    var freeMinted = await c.freeMinted();
     var baseURI = await c.baseURI();
     var bal = await state.provider.getBalance(state.contract);
     $("mint-status").innerHTML =
       "Agent ID registry: <span class='mono'>" + registry + "</span><br>" +
       "Mint is <b>" + (open ? "OPEN" : "CLOSED") + "</b><br>" +
       "Minted: <b>" + minted + " / 2,222</b> · Remaining: <b>" + remaining + "</b><br>" +
-      "Current price: <b>" + ethers.formatEther(price) + " BNB</b><br>" +
+      "Paid mint price: <b>" + ethers.formatEther(price) + " BNB</b><br>" +
+      "Free minted: <b>" + freeMinted + " / 800</b> · max 3 per wallet; Agent ID required<br>" +
       "Base URI: <span class='mono'>" + (baseURI || "(empty)") + "</span><br>" +
       "Contract balance (mint fees): <b>" + ethers.formatEther(bal) + " BNB</b>";
     setPill("pill-mint", open ? "Mint open" : "Mint closed", open ? "live" : "done");
-    log("Status: " + minted + "/2222 minted, mint " + (open ? "open" : "closed") + ", next price " + ethers.formatEther(price) + " BNB, base URI " + (baseURI || "(empty)") + ".");
+    log("Status: " + minted + "/2222 minted, mint " + (open ? "open" : "closed") + ", paid mint price " + ethers.formatEther(price) + " BNB, free minted " + freeMinted + "/800, base URI " + (baseURI || "(empty)") + ".");
   } catch (e) { log("Refresh failed: " + errText(e), "err"); }
 }
 
