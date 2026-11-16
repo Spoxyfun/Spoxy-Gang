@@ -181,7 +181,12 @@ section{padding:56px 0 6px}
 .mint-announcement time{background:#fff; border:2px solid var(--ink); border-radius:8px; padding:4px 8px; font-size:13px}
 .mint-announcement b{margin-left:auto; background:var(--purple); color:#fff; border:2px solid var(--ink); border-radius:999px; padding:7px 12px; font-size:13px}
 .mint-announcement.closed{background:#FFE7D6}
-@media(max-width:620px){.mint-announcement b{margin-left:0;width:100%;text-align:center}}
+.paid-mint-countdown{display:grid;grid-template-columns:1fr auto;gap:5px 12px;align-items:center;background:#FFF8E8;border:2.5px solid var(--ink);border-radius:14px;padding:12px 14px;margin:0 0 17px;color:var(--ink)}
+.paid-mint-countdown-label{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.paid-mint-countdown strong{font-variant-numeric:tabular-nums;font-size:21px;line-height:1;color:var(--purple);white-space:nowrap}
+.paid-mint-countdown time{grid-column:1/-1;font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.paid-mint-countdown.closed{background:#FFE7D6}
+@media(max-width:620px){.mint-announcement b{margin-left:0;width:100%;text-align:center}.paid-mint-countdown strong{font-size:18px}}
 .mint-panel{background:var(--purple); border:3px solid var(--ink); border-radius:36px; box-shadow:var(--sh-lg); padding:clamp(26px,4vw,44px); display:grid; grid-template-columns:1.05fr .95fr; gap:32px; align-items:center; color:#FFF6E5; position:relative; overflow:hidden}
 .mint-panel::before{content:""; position:absolute; width:340px; height:340px; border-radius:50%; background:rgba(185,230,46,.14); right:-110px; top:-130px}
 @media(max-width:880px){.mint-panel{grid-template-columns:1fr}}
@@ -489,6 +494,11 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
 
       <div class="mint-box">
         <span class="status" data-i18n-html="mint.status"><i></i> Mint is live</span>
+        <div class="paid-mint-countdown" id="paidMintCountdownCard" role="status" aria-live="polite">
+          <span class="paid-mint-countdown-label" data-i18n="announcement.mint_card">Paid mint closes in UTC</span>
+          <strong id="paidMintCardRemaining">19:00:00</strong>
+          <time datetime="2026-11-17T11:53:35Z">Deadline: 2026-11-17 11:53:35 UTC</time>
+        </div>
         <h3 data-i18n="mint.h3">Mint a Spoxy Ghost</h3>
         <p data-i18n="mint.p">Mint is live. Connect your wallet and mint directly, or let your agent mint with the prompt below.</p>
         <div class="price-rows">
@@ -818,6 +828,8 @@ const I18N = {
     "announcement.countdown": "Closes in {time}",
     "announcement.closed_countdown": "Closed",
     "progress.closed_deadline": "Paid mint closed · UTC deadline reached",
+    "announcement.mint_card": "Paid mint closes in UTC",
+    "announcement.mint_card_closed": "Paid mint closed at UTC deadline",
     "menu.aria": "Open menu",
     "hero.eyebrow": "<i></i> 2,222 ghosts · Mint is live",
     "hero.h1": "Little<br>ghosts.<br><span class=\"row2\">Big <mark>fun.</mark></span>",
@@ -1056,6 +1068,8 @@ const I18N = {
     "announcement.countdown": "距离关闭还有 {time}",
     "announcement.closed_countdown": "已关闭",
     "progress.closed_deadline": "付费铸造已关闭 · UTC 截止时间已到",
+    "announcement.mint_card": "付费铸造将按 UTC 关闭",
+    "announcement.mint_card_closed": "付费铸造已到 UTC 截止时间",
     "menu.aria": "打开菜单",
     "hero.eyebrow": "<i></i> 2,222 只幽灵 · 铸造进行中",
     "hero.h1": "小幽灵。<br><span class=\"row2\">大 <mark>乐趣。</mark></span>",
@@ -1295,10 +1309,17 @@ function renderPaidMintWindow(){
   const banner=document.getElementById('mintAnnouncement');
   const text=document.getElementById('mintAnnouncementText');
   const countdown=document.getElementById('paidMintCountdown');
+  const card=document.getElementById('paidMintCountdownCard');
+  const cardRemaining=document.getElementById('paidMintCardRemaining');
   const button=document.getElementById('mintBtn');
+  const remaining=formatCountdown(paidMintDeadlineMs-Date.now());
   if(banner) banner.classList.toggle('closed',!open);
+  if(card) card.classList.toggle('closed',!open);
+  if(cardRemaining) cardRemaining.textContent=remaining;
   if(text) text.textContent=t(open?'announcement.live':'announcement.closed');
-  if(countdown) countdown.textContent=t(open?'announcement.countdown':'announcement.closed_countdown').replace('{time}',formatCountdown(paidMintDeadlineMs-Date.now()));
+  if(countdown) countdown.textContent=t(open?'announcement.countdown':'announcement.closed_countdown').replace('{time}',remaining);
+  const cardLabel=document.querySelector('[data-i18n="announcement.mint_card"]');
+  if(cardLabel) cardLabel.textContent=t(open?'announcement.mint_card':'announcement.mint_card_closed');
   if(button){
     button.disabled=!open || minting;
     if(!open) button.textContent=t('announcement.closed_countdown');
