@@ -1,4 +1,4 @@
-const CACHE = "spoxyfun-v4-live-staking";
+const CACHE = "spoxyfun-v5-live-staking";
 const ASSETS = ["./", "index.html", "spoxyfun.html", "manifest.webmanifest",
   "icons/icon-192.png", "icons/icon-512.png",
   "icons/icon-maskable-512.png", "icons/apple-touch-icon.png"];
