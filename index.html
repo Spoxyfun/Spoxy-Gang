@@ -317,6 +317,11 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
 .market-pills b{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:7px 13px;font-size:13.5px}
 .market-ctas{position:relative;display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .market-note{position:relative;margin:16px 0 0;font-size:13.5px;color:#D9CDEF;font-weight:600}
+.market-opening{position:relative;display:grid;grid-template-columns:1fr auto;gap:5px 12px;align-items:center;margin-top:20px;padding:13px 15px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.5);border-radius:16px;color:#fff}
+.market-opening span{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.market-opening strong{font-variant-numeric:tabular-nums;font-size:21px;color:var(--lime);white-space:nowrap}
+.market-opening time{grid-column:1/-1;font-size:12px;color:#D9CDEF;font-variant-numeric:tabular-nums}
+.market-opening.open{background:rgba(185,230,46,.18)}
 @media(max-width:760px){.market-grid{grid-template-columns:1fr 1fr}.market-card{transform:none}}
 @media(max-width:480px){.market-grid{grid-template-columns:1fr}}
 .mine-note{margin:14px 0 0;font-size:13px;color:var(--ink-soft);font-weight:600}
@@ -553,6 +558,11 @@ footer{background:var(--ink); color:#FFF6E5; margin-top:56px; padding:34px 0 44p
         <span class="eyebrow" data-i18n-html="mk.eyebrow"><i></i> Marketplace · Coming soon</span>
         <h2 data-i18n-html="mk.h2">Trade your <em>ghosts.</em></h2>
         <p class="lead" data-i18n="mk.lead">SpoxyFun's own marketplace is on the way — buy and sell ghosts right here, without leaving the site. Mint now, and your ghost will be ready to list.</p>
+        <div class="market-opening" id="marketOpening" role="status" aria-live="polite">
+          <span id="marketOpeningLabel" data-i18n="mk.opening">Marketplace opens in UTC</span>
+          <strong id="marketOpeningCountdown">24:00:00</strong>
+          <time datetime="2026-11-17T16:09:42Z">Opens: 2026-11-17 16:09:42 UTC</time>
+        </div>
       </div>
       <div class="market-stats">
         <div><b>—</b><span data-i18n="mk.floor">Floor price</span></div>
@@ -756,7 +766,8 @@ const CONFIG = {
   FEE_BNB: "0.001",
   CHAIN_ID: 56,
   // Fixed from the user's request timestamp: 2026-11-16 15:53:35 UTC + 20 hours.
-  PAID_MINT_DEADLINE_UTC: "2026-11-17T11:53:35Z"
+  PAID_MINT_DEADLINE_UTC: "2026-11-17T11:53:35Z",
+  MARKETPLACE_OPEN_UTC: "2026-11-17T16:09:42Z"
 };
 
 /* ============ i18n — English / 中文 ============ */
@@ -821,6 +832,9 @@ const I18N = {
     "mk.cta1": "Mint a ghost →",
     "mk.cta2": "Follow @SpoxyGang",
     "mk.note": "Trading opens soon — the launch will be announced here and on X first. No listings yet; the cards above are a preview.",
+    "mk.opening": "Marketplace opens in UTC",
+    "mk.open": "Marketplace is now open",
+
     "nav.cta": "Mint <span class=\"hide-m\">· 0.001 BNB</span>",
     "announcement.label": "Announcement",
     "announcement.live": "Paid mint closes in 20 hours. The deadline is shown in UTC.",
@@ -1061,6 +1075,9 @@ const I18N = {
     "mk.cta1": "铸造幽灵 →",
     "mk.cta2": "关注 @SpoxyGang",
     "mk.note": "交易即将开放——上线消息将率先在此页面和 X 上公布。目前尚无挂单，上方卡片仅为预览。",
+    "mk.opening": "交易市场将按 UTC 开放",
+    "mk.open": "交易市场现已开放",
+
     "nav.cta": "铸造 <span class=\"hide-m\">· 0.001 BNB</span>",
     "announcement.label": "公告",
     "announcement.live": "付费铸造将在 20 小时后关闭，截止时间以 UTC 显示。",
@@ -1299,6 +1316,8 @@ function toast(msg){
 /* ============ Paid mint UTC deadline ============ */
 const paidMintDeadlineMs=Date.parse(CONFIG.PAID_MINT_DEADLINE_UTC);
 function paidMintIsOpen(){return Date.now()<paidMintDeadlineMs;}
+const marketplaceOpenMs=Date.parse(CONFIG.MARKETPLACE_OPEN_UTC);
+function marketplaceIsOpen(){return Date.now()>=marketplaceOpenMs;}
 function formatCountdown(ms){
   const total=Math.max(0,Math.floor(ms/1000));
   const h=Math.floor(total/3600), m=Math.floor((total%3600)/60), sec=total%60;
@@ -1326,6 +1345,15 @@ function renderPaidMintWindow(){
     else if(!minting) button.textContent=t('mint.btn');
   }
   return open;
+}
+function renderMarketplaceWindow(){
+  const open=marketplaceIsOpen();
+  const panel=document.getElementById('marketOpening');
+  const label=document.getElementById('marketOpeningLabel');
+  const countdown=document.getElementById('marketOpeningCountdown');
+  if(panel) panel.classList.toggle('open',open);
+  if(label) label.textContent=t(open?'mk.open':'mk.opening');
+  if(countdown) countdown.textContent=open?'OPEN':formatCountdown(marketplaceOpenMs-Date.now());
 }
 /* ============ Wallet + direct mint ============ */
 let account=null;
@@ -1767,7 +1795,8 @@ try{
 }
 setLang(preferred);
 renderPaidMintWindow();
-setInterval(renderPaidMintWindow,1000);
+renderMarketplaceWindow();
+setInterval(()=>{renderPaidMintWindow();renderMarketplaceWindow();},1000);
 ensureMintProgressCells();
 refreshMintStats();
 setInterval(refreshMintStats,15000);
